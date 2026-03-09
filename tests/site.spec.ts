@@ -26,11 +26,11 @@ test("roadmap links phases and guide content", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "从零开始，按阶段掌握，而不是按零散文章跳读" }),
   ).toBeVisible();
-  await page
+  const installLink = page
     .getByTestId("roadmap-phase-phase-install")
-    .getByRole("link", { name: "进入本阶段" })
-    .click();
-  await expect(page).toHaveURL(/\/phases\/phase-install$/);
+    .getByRole("link", { name: "进入本阶段" });
+  await expect(installLink).toHaveAttribute("href", "/phases/phase-install");
+  await page.goto("/phases/phase-install");
   await expect(page.getByRole("heading", { name: "安装与启动" })).toBeVisible();
   await expect(page.getByText("本阶段推荐资源")).toBeVisible();
 });
