@@ -1,21 +1,23 @@
 import { expect, test } from "@playwright/test";
 
-test("homepage exposes both tutorial and resource entry points", async ({ page }) => {
+test("homepage presents the curated learning route and entry points", async ({ page }) => {
   await page.goto("/");
 
-  await expect(
-    page.getByRole("heading", { name: "学会 OpenClaw，别再被文档淹没。" }),
-  ).toBeVisible();
+  const heroHeading = page.locator("h1").first();
+  await expect(heroHeading).toContainText("学会 OpenClaw");
+  await expect(heroHeading).toContainText("别再被文档淹没。");
   await expect(page.getByRole("link", { name: "开始学习" }).first()).toHaveAttribute(
     "href",
     "/tutorials",
   );
-  await expect(page.getByRole("link", { name: "浏览资源" }).first()).toHaveAttribute(
+  await expect(page.getByRole("link", { name: "查看路线" }).first()).toHaveAttribute(
     "href",
-    "/resources",
+    "/roadmap",
   );
-  await expect(page.getByText("精选教程")).toBeVisible();
-  await expect(page.getByText("精选资源")).toBeVisible();
+  await expect(page.getByTestId("home-route-snapshot")).toBeVisible();
+  await expect(page.getByTestId("home-curated-section")).toContainText("精选教程");
+  await expect(page.getByTestId("home-curated-section")).toContainText("精选资源");
+  await expect(page.getByRole("heading", { name: "FAQ" })).toHaveCount(0);
 });
 
 test("roadmap links phases and guide content", async ({ page }) => {

@@ -9,14 +9,14 @@ export default defineConfig({
   fullyParallel: true,
   reporter: "list",
   use: {
-    baseURL: "http://127.0.0.1:3401",
+    baseURL: "http://127.0.0.1:3001",
     trace: "on-first-retry",
   },
   webServer: {
-    command: "npm run dev -- --hostname 127.0.0.1 --port 3401",
-    url: "http://127.0.0.1:3401",
+    command: "npm run dev -- --hostname 127.0.0.1 --port 3001",
+    url: "http://127.0.0.1:3001",
     timeout: 120_000,
-    reuseExistingServer: false,
+    reuseExistingServer: true,
   },
   projects: [
     {

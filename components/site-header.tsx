@@ -28,8 +28,8 @@ export function SiteHeader() {
           <Link href="/resources" className="transition hover:text-white">
             资源聚合
           </Link>
-          <Link href="/#faq" className="transition hover:text-white">
-            FAQ
+          <Link href="/#learning-route" className="transition hover:text-white">
+            学习路径
           </Link>
           <Link
             href="https://github.com/openclaw/openclaw"
