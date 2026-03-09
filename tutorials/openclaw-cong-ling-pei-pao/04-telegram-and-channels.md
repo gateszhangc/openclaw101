@@ -1,0 +1,243 @@
+---
+title: "OpenClaw 从零陪跑 04｜让它真正开口说话：Telegram 和聊天渠道"
+series: "OpenClaw 从零陪跑"
+episode: 4
+role_name: "虾滑"
+---
+
+# OpenClaw 从零陪跑 04｜让它真正开口说话：Telegram 和聊天渠道
+
+> “接渠道不是给 OpenClaw 增加智商，而是给它增加入口。它本来就会思考，你现在做的是把电话线接上。” 
+
+## Chapter Overview
+
+今天你会完成这些事：
+
+- 弄清楚 `Gateway` 和 `Channel` 的关系
+- 知道为什么新手第一条外部渠道推荐 Telegram
+- 创建 Telegram Bot Token
+- 把 Telegram 接进 OpenClaw
+- 解决最常见的问题：机器人在线，但第一次不回复
+
+## 先把关系讲清楚：Gateway 不是渠道
+
+很多新手会把这两件事混为一谈：
+
+- “OpenClaw 跑起来了”
+- “Telegram 接好了”
+
+但这其实是两层。
+
+| 层 | 它负责什么 |
+| --- | --- |
+| Gateway | 后台接消息、调模型、跑任务 |
+| Channel | 把消息从某个平台送进来，再把回复送回去 |
+
+所以如果你上一节已经能在 Dashboard 里正常聊天，那说明：
+
+- Gateway 大概率是好的
+- 模型认证大概率是好的
+
+你今天新增的，只是一个对话入口。
+
+这也是为什么我们把 Telegram 放到第 4 篇再讲。
+
+## 为什么先接 Telegram
+
+不是因为 Telegram 最强。
+
+而是因为它对第一次接渠道的新手最友好。
+
+官方文档的整体信号也很明确：
+
+- 最快第一次聊天：先用 Dashboard
+- 第一个外部聊天渠道：Telegram 往往最省事
+- WhatsApp 当然很流行，但它需要二维码登录，也会存更多本地状态
+
+如果你只是要一个“手机里真的能聊”的结果，Telegram 很适合做第一站。
+
+> **虾滑的话**
+>
+> 先接 Telegram 的好处，不是它最酷。
+>
+> 是它最少把你拖进“我到底是在配渠道，还是在修系统”的混乱里。
+
+## 第一步：去 BotFather 创建一个机器人
+
+打开 Telegram，搜索 `@BotFather`。
+
+注意，一定确认用户名真的是 `@BotFather`，别搜错。
+
+然后按这个流程走：
+
+1. 发 `/newbot`
+2. 给机器人起一个显示名
+3. 给机器人起一个以 `bot` 结尾的用户名
+4. 复制它返回给你的 `token`
+
+这串 token 就是你把 Telegram 这个入口接进 OpenClaw 的钥匙。
+
+### Token 要怎么保管
+
+很简单：
+
+**把它当密码。**
+
+谁拿到它，谁就能控制你的 Telegram Bot。
+
+如果你怀疑泄露，去 BotFather 里重置，不要继续硬用旧 token。
+
+## 第二步：把 Telegram 接进 OpenClaw
+
+最省心的做法，不是手改 JSON。
+
+而是重新跑一遍向导：
+
+```bash
+openclaw onboard
+```
+
+当向导问到聊天渠道时，选择 Telegram，把刚才拿到的 token 填进去。
+
+如果你之后确实要研究配置文件，官方文档里也给了最小配置片段；但**对第一次上手来说，向导更稳**。
+
+## 第三步：发出第一条正常私信
+
+这一步最容易卡住，而且卡得很让人误会。
+
+你以为流程应该是：
+
+1. 找到机器人
+2. 发消息
+3. 它秒回
+
+但默认不是这样。
+
+官方文档里说得很清楚：
+
+**私信默认是 pairing 模式。**
+
+也就是：未知私信先不给正式回复，而是先走一次配对审批。
+
+### 一个细节特别重要
+
+如果你在 Telegram 里只发 `/start`，不一定会触发你想要的那个正常配对流程。
+
+最稳的方式是：**发一句正常文本消息。**
+
+比如：
+
+- “你好”
+- “你现在能正常收到消息吗？”
+- “以后请叫我阿周”
+
+## 第四步：批准 pairing 码
+
+如果默认是 pairing 模式，那么第一次私信时，系统会给出一个短码。
+
+这时候你要做的是批准它。
+
+```bash
+openclaw pairing list telegram
+openclaw pairing approve telegram <code>
+```
+
+批准以后，再回到 Telegram 发一条正常消息。
+
+这时你看到的才应该是“真正的 AI 回复”。
+
+## 第五步：判断是否真的接通
+
+不要只看 Bot 在线。
+
+真正的成功标准是：
+
+1. 你能在 Telegram 里找到这个 Bot
+2. 你发正常私信后，收到 pairing 码并完成批准
+3. 之后它能正常理解并回复你的消息
+
+可以用下面 3 句测试：
+
+- “你还记得我刚才在 Dashboard 里做了什么吗？”
+- “用 3 句话介绍你当前的能力边界。”
+- “以后如果我第一次联系你，你默认应该怎么处理？”
+
+## 机器人在线但不回复，通常是这几种原因
+
+### 1. pairing 还没批准
+
+这是第一高频原因。
+
+Bot 没坏，只是它在按安全策略办事。
+
+### 2. 你只发了 `/start`
+
+很多人以为 `/start` 就够了，但默认流程里更稳的是先发一条普通文本。
+
+### 3. 你以为这是模型问题，其实是渠道问题
+
+如果 Dashboard 能聊，Telegram 不能聊，大概率别先怀疑模型。
+
+先查渠道配置和 pairing。
+
+### 4. 你后面想进群聊，却没搞清 Telegram 的隐私模式
+
+群聊是下一阶段的事。
+
+先知道一个事实就够了：**群聊权限、隐私模式、管理员权限** 会影响机器人看到多少消息。
+
+第一次上手，先别把难度升级到群里。
+
+### 5. 你把 token 配好了，却用 Bun 跑
+
+官方文档对这件事给过明显提醒：Telegram 更适合跑在 Node 上。
+
+> **虾滑提醒**
+>
+> “机器人在线”不等于“渠道已经配好”。
+>
+> 真正的判断标准从来不是状态灯，而是：你能不能稳定地发消息、收到回复、再次发消息、再次收到回复。
+
+## Key Takeaways
+
+- `Gateway` 是后台总控，`Channel` 是消息入口
+- 第一个外部渠道先接 Telegram，排错最简单
+- Telegram 第一次私信默认常常会碰到 pairing，而不是直接回复
+- “机器人在线但不回”最常见的原因，不是大模型坏了，而是渠道或 pairing 没走完
+
+## Today’s Task
+
+完成这套最小动作：
+
+1. 在 BotFather 创建 Bot
+2. 跑 `openclaw onboard`
+3. 选择 Telegram 并填入 token
+4. 在 Telegram 里发一句正常文本
+5. 批准 pairing
+6. 再发一句正常文本，确认回复
+
+## Today’s Achievement
+
+今天以后，OpenClaw 不再只活在你浏览器里。
+
+它开始出现在你真正会打开的聊天工具里了。
+
+这一步的心理感受通常会非常明显：
+
+“哦，它真的开始像一个助手，而不是一套本地软件了。”
+
+## Preview
+
+下一篇我们来做最有“养成感”的一件事：
+
+**给你的助手写人格、边界和长期记忆。**
+
+也就是让它不再像一个通用 AI，而开始像“你的虾滑”。
+
+## 官方参考
+
+- [OpenClaw 聊天渠道总览](https://docs.openclaw.ai/zh-CN/channels)
+- [OpenClaw Telegram 文档](https://docs.openclaw.ai/zh-CN/channels/telegram)
+- [OpenClaw 入门指南](https://docs.openclaw.ai/zh-CN/start/getting-started)
+- [OpenClaw CLI pairing](https://docs.openclaw.ai/zh-CN/cli/pairing)
+
