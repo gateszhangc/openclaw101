@@ -13,6 +13,9 @@
   "author": "",
   "license": "ISC",
   "description": "",
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "dependencies": {
     "clsx": "^2.1.1",
     "github-slugger": "^2.0.0",
