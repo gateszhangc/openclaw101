@@ -1,6 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { localizeHref, type Locale } from "@/lib/i18n";
+import { SITE_LOGO_ASSET } from "@/lib/site-assets";
 
 type SiteFooterProps = {
   locale: Locale;
@@ -54,8 +56,18 @@ export function SiteFooter({ locale }: SiteFooterProps) {
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 text-sm text-white/60 sm:px-6 lg:grid-cols-[1.2fr_0.8fr_0.8fr] lg:px-8">
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] font-semibold text-white">
-              O1
+            <span
+              data-testid="site-footer-logo-mark"
+              className="inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] shadow-[0_10px_24px_rgba(0,0,0,0.22)]"
+            >
+              <Image
+                src={SITE_LOGO_ASSET.path}
+                alt=""
+                width={SITE_LOGO_ASSET.width}
+                height={SITE_LOGO_ASSET.height}
+                data-testid="site-footer-logo-image"
+                className="h-full w-full object-cover"
+              />
             </span>
             <div>
               <p className="font-[family-name:var(--font-serif)] text-xl text-white">OpenClaw101</p>

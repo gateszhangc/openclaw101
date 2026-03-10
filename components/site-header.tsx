@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -57,6 +58,7 @@ export function SiteHeader({ locale }: SiteHeaderProps) {
               alt=""
               width={SITE_LOGO_ASSET.width}
               height={SITE_LOGO_ASSET.height}
+              data-testid="site-logo-image"
               className="h-full w-full object-cover"
               priority
             />
@@ -94,7 +96,9 @@ export function SiteHeader({ locale }: SiteHeaderProps) {
         </nav>
 
         <div className="flex items-center gap-3">
-          <LocaleSwitcher locale={locale} />
+          <Suspense fallback={<div aria-hidden className="h-9 w-[92px]" />}>
+            <LocaleSwitcher locale={locale} />
+          </Suspense>
           <Link
             href={localizeHref(locale, "/guide")}
             prefetch={false}

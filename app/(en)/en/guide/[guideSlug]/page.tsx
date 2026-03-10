@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { GuideDetailPage } from "@/components/pages/guide-detail-page";
-import { buildPageMetadata } from "@/lib/metadata";
 import { getAllGuides, getGuideBySlug } from "@/lib/guides";
+import { buildPageMetadata } from "@/lib/metadata";
 import { getGuideCoverAsset } from "@/lib/site-assets";
 
 type GuidePageProps = {

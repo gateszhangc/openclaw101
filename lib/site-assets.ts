@@ -5,9 +5,9 @@ export type StaticImageAsset = {
 };
 
 export const SITE_LOGO_ASSET: StaticImageAsset = {
-  path: "/android-chrome-192x192.png",
-  width: 192,
-  height: 192,
+  path: "/logo.png",
+  width: 512,
+  height: 512,
 };
 
 export const DEFAULT_OPEN_GRAPH_ASSET: StaticImageAsset = {

@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test("homepage funnels users into the new product-style guide flow", async ({ page }) => {
   await page.goto("/");
+  await expect(page.locator("html")).toHaveAttribute("lang", "zh-CN");
 
   const heroHeading = page.locator("h1").first();
   await expect(heroHeading).toContainText("学会 OpenClaw");
@@ -18,6 +19,9 @@ test("homepage funnels users into the new product-style guide flow", async ({ pa
   await expect(page.getByTestId("home-resource-section")).toContainText("把最常回查的入口先收起来");
   await expect(page.getByTestId("home-resource-section")).toContainText("官方入门指南");
   await expect(page.getByTestId("site-logo-mark")).toBeVisible();
+  await expect(page.getByTestId("site-logo-image")).toHaveAttribute("src", /logo\.png/);
+  await expect(page.getByTestId("site-footer-logo-mark")).toBeVisible();
+  await expect(page.getByTestId("site-footer-logo-image")).toHaveAttribute("src", /logo\.png/);
   await expect(page.locator('[aria-label="Toggle color theme"]')).toHaveCount(0);
 
   const howLink = page.locator('a[href="/#how-it-works"]');
@@ -165,6 +169,9 @@ test("english locale keeps localized routes, copy, and filters", async ({ page }
     "/en/resources",
   );
   await expect(page.getByTestId("site-logo-mark")).toBeVisible();
+  await expect(page.getByTestId("site-logo-image")).toHaveAttribute("src", /logo\.png/);
+  await expect(page.getByTestId("site-footer-logo-mark")).toBeVisible();
+  await expect(page.getByTestId("site-footer-logo-image")).toHaveAttribute("src", /logo\.png/);
 
   await page.goto("/en/guide", { waitUntil: "domcontentloaded" });
   await expect(
