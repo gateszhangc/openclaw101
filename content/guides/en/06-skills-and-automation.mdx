@@ -1,0 +1,314 @@
+---
+title: "OpenClaw from Scratch 06 | Get It Working: Skills, ClawHub, Heartbeat, Cron"
+description: "Move OpenClaw from being able to chat to being able to act proactively, with a clear understanding of how Skills, Heartbeat, and Cron divide the work."
+episode: 6
+roleName: "Xiahua"
+phaseSlug: "phase-automation"
+order: 6
+keyTakeaways:
+  - "A Skill is a directory of instructions that teaches the assistant how to use tools. It is not a magic plugin."
+  - "When beginners install a Skill for the first time, the safest path is to install it into the current workspace and test it in a new session."
+  - "Treat third-party Skills as untrusted code."
+  - "Heartbeat is for periodic sensing, while Cron is for precise scheduling."
+  - "The most stable approach is not choosing one or the other, but combining Heartbeat and Cron."
+---
+
+# OpenClaw from Scratch 06 | Get It Working: Skills, ClawHub, Heartbeat, Cron
+
+> "There are plenty of AIs that can chat. Very few actually feel like assistants. The difference usually is not whether they can talk. It is whether they have tools, remember context, and show up proactively when they should."
+
+## Chapter Overview
+
+This is the chapter in the series that feels most like a graduation round.
+
+You will understand:
+
+- What Skills actually are, and how they relate to tool implementations
+- What ClawHub is, and the main path for installing Skills
+- Which scenarios Heartbeat and Cron each fit best
+- How to get your Xiahua to start doing things proactively instead of waiting for you every time
+
+## What Skills actually are
+
+The first time beginners see Skills, they often misunderstand them as:
+
+"If I install a Skill, does it automatically gain some API?"
+
+Not exactly.
+
+The official docs describe it more precisely:
+
+**A Skill is an instruction directory with a `SKILL.md`, and at its core it teaches the assistant how to use tools.**
+
+So the better plain-English model is:
+
+- Tools are like hands and feet
+- Skills are like instruction manuals
+
+A Skill does not create capability out of thin air. It teaches the assistant when to use a tool, how to use it, and what kind of output to produce.
+
+## Where Skills live and which one wins
+
+In the official docs, Skills have three main loading locations:
+
+- Built-in Skills
+- `~/.openclaw/skills`
+- `<workspace>/skills`
+
+The priority order is:
+
+**Workspace > local shared > built-in**
+
+In practice, this means:
+
+If you install a Skill with the same name in the current workspace, it overrides the globally shared version.
+
+For beginners, one conclusion is enough:
+
+**For your first install, put it in the current workspace.**
+
+That makes it much less likely that different projects get mixed together.
+
+> **A note from Xiahua**
+>
+> Think of a Skill as an operation card written for the assistant.
+>
+> It is not "the more you install, the stronger it gets." It is "the more appropriate the Skill, the more it feels like your teammate."
+
+## What ClawHub is
+
+ClawHub is OpenClaw's public Skill registry.
+
+You can think of it as:
+
+**An app store for the assistant's toolbox.**
+
+The three most common actions are:
+
+```bash
+clawhub install <skill-slug>
+clawhub update --all
+clawhub sync --all
+```
+
+On your first run, you only need to remember the first one:
+
+```bash
+clawhub install <skill-slug>
+```
+
+By default, it installs the Skill into `./skills` under the current working directory, or falls back to the configured workspace.
+
+### One detail that is easy to miss
+
+The official docs are explicit about this:
+
+**A newly installed Skill should be expected to take effect from a new session onward.**
+
+In other words, do not install it and immediately bet that the current chat fully sees it already.
+
+The safest approach is:
+
+1. Install the Skill
+2. Start a new session
+3. Test it there
+
+## Do not treat third-party Skills as automatically trustworthy
+
+This point deserves its own section.
+
+The official security stance is clear:
+
+**Treat third-party Skills as untrusted code.**
+
+In plain English, that means:
+
+- Do not install them without reading them
+- Do not paste sensitive keys directly into prompts
+- For external actions and high-risk operations, favor sandboxing and confirmation mechanisms
+
+So the best beginner strategy is not "install everything."
+
+It is:
+
+**Install one or two Skills that you will genuinely use right away.**
+
+## How to think about Heartbeat and Cron
+
+These two concepts are another place where beginners get mixed up.
+
+The simplest plain-English version is:
+
+| Mechanism | A simple way to think about it | Best for |
+| --- | --- | --- |
+| Heartbeat | A body clock | Periodic patrols and checking batches of things |
+| Cron | A timed alarm | Executing something at an exact time |
+
+### One-line memory aid
+
+- "Check every so often and see whether anything needs attention" -> Heartbeat
+- "Do this at 9:00 every day" -> Cron
+
+## Heartbeat: let the assistant wake up periodically
+
+The official docs describe Heartbeat very clearly:
+
+It is a periodic awareness mechanism inside the main session, and by default it is suited for batch-style checking.
+
+For example:
+
+- Check whether the inbox contains important mail
+- Check whether there are calendar events in the next two hours
+- Check whether a background task has finished
+
+One advantage of Heartbeat is this: **it has context.**
+
+Because it stays connected to the main session, it is not just mechanical polling. It can combine what happened recently and decide whether it is worth interrupting you now.
+
+### A beginner-friendly `HEARTBEAT.md` example
+
+```md
+# Heartbeat checklist
+
+- Check email for urgent messages
+- Review calendar for events in next 2 hours
+- If a background task finished, summarize results
+- If idle for 8+ hours, send a brief check-in
+```
+
+The official docs also point out one important thing:
+
+**If `HEARTBEAT.md` is empty, or contains only comments, Heartbeat will not magically do work for you.**
+
+## Cron: execute at an exact time
+
+If what you want is:
+
+- A report every morning at 7
+- A weekly update every Monday at 9
+- A reminder 20 minutes from now
+
+Then that is Cron, not Heartbeat.
+
+The example in the official docs is very direct:
+
+```bash
+openclaw cron add \
+  --name "Morning briefing" \
+  --cron "0 7 * * *" \
+  --tz "America/New_York" \
+  --session isolated \
+  --message "Generate today's briefing: weather, calendar, top emails, news summary." \
+  --model opus \
+  --announce \
+  --channel whatsapp \
+  --to "+15551234567"
+```
+
+If you only need a one-time reminder, the official docs also show an `--at` example:
+
+```bash
+openclaw cron add \
+  --name "Meeting reminder" \
+  --at "20m" \
+  --session main \
+  --system-event "Reminder: standup meeting starts in 10 minutes." \
+  --wake-now \
+  --delete-after-run
+```
+
+You do not need to memorize every one of those parameters on day one.
+
+You only need to know this:
+
+- Heartbeat is more like daily patrol
+- Cron is more like a precise alarm
+
+## The most recommended beginner combination
+
+The official docs are actually hinting at a best combination:
+
+### Use Heartbeat for these
+
+- Inbox checks
+- Calendar reminders
+- Background task follow-through
+- Low-frequency but ongoing state observation
+
+### Use Cron for these
+
+- Morning briefings
+- Weekly summaries
+- One-time reminders
+- Tasks that absolutely must run at a specific time
+
+The core value of this combination is not "more features."
+
+It is:
+
+**It lets your assistant avoid both extremes: being too noisy and always waiting for you to speak first.**
+
+> **Xiahua's reminder**
+>
+> Beginners usually make one of two automation mistakes:
+>
+> One is "automate nothing," so the assistant never becomes more than a chat window.
+>
+> The other is "automate everything," so you end up annoyed by your own AI every day.
+
+## When to stop instead of adding more Skills
+
+If you start to see these signs, stop there:
+
+- You cannot clearly explain what each Skill does anymore
+- You install them and never actually use them
+- When something breaks, you no longer know whether the issue is the channel, the model, or the Skill
+- You start automating everything without setting boundaries
+
+What makes OpenClaw truly powerful is not "stacking unlimited features."
+
+It is growing a collaboration system that actually fits you over time.
+
+## Today's Task
+
+Today, it is enough to finish these three small things:
+
+1. Go through the currently available Skill types in ClawHub
+2. Install one Skill that you will genuinely use
+3. Write a minimum `HEARTBEAT.md` checklist
+
+If you want to do one extra step, add the simplest possible reminder-style Cron.
+
+## Today's Achievement
+
+By this point, your OpenClaw is no longer just "something that can talk to you."
+
+It is starting to gain three traits that make it feel like a real assistant:
+
+- It has tools
+- It has long-term rules
+- It shows up proactively at the right time
+
+That is also the most important finish line of this guide series.
+
+## Preview
+
+This first main pass of the series ends here.
+
+The best next step for you is not to add 20 more settings. It is to look back and ask:
+
+- Which step felt the most stuck
+- Which step delivered the most value
+- Which step you most want to go deeper on
+
+An OpenClaw setup that remains useful long term is never built in one rush.
+
+It is raised and refined over time.
+
+## Official References
+
+- [OpenClaw Skills Docs](https://docs.openclaw.ai/zh-CN/tools/skills)
+- [OpenClaw ClawHub Docs](https://docs.openclaw.ai/zh-CN/tools/clawhub)
+- [OpenClaw Cron vs Heartbeat](https://docs.openclaw.ai/zh-CN/automation/cron-vs-heartbeat)
+- [OpenClaw Heartbeat](https://docs.openclaw.ai/zh-CN/gateway/heartbeat)
+- [OpenClaw Cron Jobs](https://docs.openclaw.ai/zh-CN/automation/cron-jobs)

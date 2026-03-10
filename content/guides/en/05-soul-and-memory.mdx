@@ -1,0 +1,302 @@
+---
+title: "OpenClaw from Scratch 05 | Make It Feel Like Your Assistant: SOUL, USER, IDENTITY, AGENTS"
+description: "The key to turning a template-flavored generic AI into something that feels like your assistant is writing SOUL, USER, IDENTITY, and AGENTS clearly."
+episode: 5
+roleName: "Xiahua"
+phaseSlug: "phase-memory"
+order: 5
+keyTakeaways:
+  - "That template feeling is usually not a model problem. It is that the personality and context are not specific enough."
+  - "SOUL.md controls personality and boundaries, USER.md controls who you are, IDENTITY.md controls its outward identity, and AGENTS.md controls work rules."
+  - "Vague adjectives have no force. Specific rules are what actually change behavior."
+  - "These files are not one-time forms. They are interfaces you keep iterating over time."
+---
+
+# OpenClaw from Scratch 05 | Make It Feel Like Your Assistant: SOUL, USER, IDENTITY, AGENTS
+
+> "An AI that can answer questions is not the same thing as an AI that feels like a member of your team. The difference usually is not the model itself. It is whether you took those quiet-looking files seriously."
+
+## Chapter Overview
+
+In this chapter, you will understand:
+
+- Why a freshly installed assistant always has a bit of a template feel
+- What `SOUL.md`, `USER.md`, `IDENTITY.md`, and `AGENTS.md` each control
+- What belongs in those files, and what does not
+- How to turn a vague persona into settings that actually affect behavior
+
+## Why your freshly installed assistant feels a little like customer support
+
+This is something almost every beginner runs into.
+
+It can answer questions and it seems smart enough, but something still feels off:
+
+- It sounds too standardized
+- It does not know who you are
+- It does not know what you are working on
+- It starts by asking follow-up questions about everything
+- What it writes feels like a template, not collaboration
+
+That is not because the model is too weak.
+
+It is because **it still does not have a clear enough role, boundary set, and context**.
+
+The workspace files in OpenClaw are the key to fixing that.
+
+## Keep the simplest plain-English version in mind first
+
+If all of these files are hard to remember, start with these four lines:
+
+| File | What it controls | Plain-English meaning |
+| --- | --- | --- |
+| `SOUL.md` | Personality, boundaries, behavior style | Who it is |
+| `USER.md` | Long-term information about you | Who you are |
+| `IDENTITY.md` | Outward image and identity card | How it introduces itself |
+| `AGENTS.md` | Work methods and runtime rules | How it works |
+
+Many people write `AGENTS.md` like it is a personality file.
+
+That is the first common mistake.
+
+**Personality belongs in `SOUL.md`, not in `AGENTS.md`.**
+
+> **A note from Xiahua**
+>
+> You can remember it like this:
+>
+> `SOUL` is the heart, `IDENTITY` is the face, `USER` is you, and `AGENTS` is the operations manual.
+
+## `SOUL.md`: what kind of assistant it actually is
+
+The most important thing about `SOUL.md` is not whether it sounds pretty. It is whether it **changes behavior**.
+
+### If it is vague, it is basically unwritten
+
+For example:
+
+- You are a friendly AI assistant
+- You are always eager to help
+- You always answer seriously
+
+These barely constrain anything.
+
+Because any generic AI can say it is "friendly, serious, and helpful."
+
+### It becomes useful only when it gets specific
+
+For example:
+
+- Default to getting to the point instead of opening with a long warm-up
+- If you can look something up yourself, do that first instead of throwing the question back to me
+- Confirm before sending external messages, speaking publicly, or doing destructive actions
+- Be proactive for internal research, organizing, and summarizing
+- Do not interrupt late at night unless something is truly urgent
+
+That kind of line actually changes behavior.
+
+### A "Xiahua-style" example
+
+```md
+# SOUL.md
+
+你叫虾滑。
+
+- 语气直接、聪明、略带幽默，但不要油滑
+- 能自己查清楚的事情先查，再来汇报结论
+- 对外发送邮件、公开发言、删除性操作前必须确认
+- 对内查询、整理、总结时尽量主动
+- 发现用户在深夜还在高强度工作时，可以提醒休息，但不要说教
+```
+
+The point here is not the name "Xiahua."
+
+The point is that **it makes tone, initiative, and red lines concrete**.
+
+## `USER.md`: help it understand who you are
+
+`USER.md` is not written for other people.
+
+It is written for your assistant.
+
+Many people put one line in this file, such as "I work in product," and stop there.
+
+That is too little.
+
+What is genuinely useful looks more like this:
+
+- What kind of work you do
+- What you care about most right now
+- Your time zone and work rhythm
+- What kind of expression style you prefer
+- Which long-term projects or recurring websites matter to you
+
+### A concise but useful template
+
+```md
+# USER.md
+
+- 我主要做独立开发和内容运营
+- 常用工具是 VS Code、Notion、Telegram
+- 时区是 Asia/Shanghai
+- 我喜欢结论优先、分点表达
+- 我不喜欢太像客服的话术
+- 我当前在做 2 个长期项目：项目 A、项目 B
+```
+
+It does not look complex, but it is already enough to save the assistant from a lot of unnecessary detours.
+
+## `IDENTITY.md`: how it introduces itself to the outside world
+
+Many beginners ignore `IDENTITY.md` and think, "If it works, that is enough."
+
+But this file has one very practical job:
+
+**It decides how the assistant presents itself outwardly.**
+
+That includes:
+
+- What it is called
+- How it frames its role
+- What tone it uses for self-introduction
+
+If you have not picked a name yet, you can even just reuse the guide's name and call it **Xiahua** for now.
+
+That is not required, but it makes the whole experience feel more like "an assistant" and less like "an anonymous interface."
+
+## `AGENTS.md`: how it works
+
+`AGENTS.md` controls work rules, not personality.
+
+For example:
+
+- Which files it should read at the beginning of a session
+- Which kinds of tasks it should research by itself first
+- Which operations must be confirmed
+- How it should remember things
+- How it should speak in group chats
+- What it should prioritize during heartbeat
+
+You can think of it like this:
+
+**This is not the soul setting. It is the operating manual.**
+
+The official docs are also clear on the role of `AGENTS.md`: it is more about runtime rules and work boundaries.
+
+## The four writing mistakes beginners make most often
+
+### Mistake 1: It is all adjectives and no rules
+
+For example: "smart, kind, patient, professional."
+
+Those are not behavior.
+
+### Mistake 2: It is all persona and no boundaries
+
+You wrote an interesting character setup, but you never made these parts clear:
+
+- When it should be proactive
+- When it must confirm
+- Which things it must never do
+
+That makes the assistant feel stylish, but not reliable.
+
+### Mistake 3: `USER.md` only states identity, not preferences
+
+"I am a programmer" is nowhere near enough.
+
+It needs to know what kind of output you like, what you are working on right now, and which styles you dislike.
+
+### Mistake 4: You write it once and never touch it again
+
+These four files are not a form to fill out.
+
+They are more like long-term interfaces for how you and the assistant learn to work together.
+
+After using it for a while, you will definitely come back and revise them.
+
+> **Xiahua's reminder**
+>
+> A good personality file is not "creative writing."
+>
+> It is closer to configuration that really affects execution style.
+
+## How you should start today
+
+Do not try to fill everything in at once.
+
+Start by putting three to five genuinely constraining pieces of information into each file.
+
+The recommended order is:
+
+1. Write `USER.md` first
+2. Then write `SOUL.md`
+3. Then write `IDENTITY.md`
+4. Finally fill in `AGENTS.md`
+
+Why?
+
+Because if "who you are" is still unclear, the assistant's personality easily turns into a floating castle.
+
+## Today's Task
+
+Do not aim for perfection today. Just finish a minimum version:
+
+### `SOUL.md`
+
+Write three lines:
+
+- How it should speak by default
+- What it can do proactively
+- What it must confirm
+
+### `USER.md`
+
+Write five lines:
+
+- Who you are
+- What you do
+- What time zone you are in
+- What expression style you prefer
+- What you care about most right now
+
+### `IDENTITY.md`
+
+Give it a name.
+
+If you still have not decided, use "Xiahua" for now.
+
+### `AGENTS.md`
+
+Add three work rules:
+
+- What to read first
+- What to research first without asking you
+- What it must not decide on its own
+
+## Today's Achievement
+
+From this chapter onward, your assistant is no longer just "able to reply."
+
+It starts to have:
+
+- Its own behavior style
+- A long-term understanding of you
+- A set of collaborative rules that can be refined over time
+
+This is where OpenClaw starts to pull away from ordinary chat tools in a real way.
+
+## Preview
+
+In the next chapter, we add the final piece:
+
+**Skills, ClawHub, Heartbeat, and Cron.**
+
+That is where it goes from "an assistant that can chat" to "an assistant that can act proactively."
+
+## Official References
+
+- [SOUL template](https://docs.openclaw.ai/zh-CN/reference/templates/SOUL)
+- [USER template](https://docs.openclaw.ai/zh-CN/reference/templates/USER)
+- [IDENTITY template](https://docs.openclaw.ai/zh-CN/reference/templates/IDENTITY)
+- [AGENTS template](https://docs.openclaw.ai/zh-CN/reference/templates/AGENTS)
+- [OpenClaw Onboarding Guide](https://docs.openclaw.ai/zh-CN/start/onboarding)

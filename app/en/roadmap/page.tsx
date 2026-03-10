@@ -1,5 +1,5 @@
 import { RoadmapPage } from "@/components/pages/roadmap-page";
 
 export default function Page() {
-  return <RoadmapPage locale="zh" />;
+  return <RoadmapPage locale="en" />;
 }

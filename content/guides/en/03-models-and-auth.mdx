@@ -1,0 +1,216 @@
+---
+title: "OpenClaw from Scratch 03 | Hook Up the Brain: Models, Providers, and Auth"
+description: "Separate Provider, Model, and Auth clearly, and take a stable default-model path the first time."
+episode: 3
+roleName: "Xiahua"
+phaseSlug: "phase-models"
+order: 3
+keyTakeaways:
+  - "Provider is the brain supplier, Model is the specific brain, and Auth is the credential key."
+  - "A page opening successfully does not mean model auth is configured correctly."
+  - "The official docs show both Venice and Anthropic, but the main teaching path needs to stay focused."
+  - "The most stable beginner setup is to keep one clearly working default model."
+---
+
+# OpenClaw from Scratch 03 | Hook Up the Brain: Models, Providers, and Auth
+
+> "Many people think they are configuring a model, but they are really touching three things at once: where the brain comes from, how to sign in, and which one is on duty by default. If those three are not clearly separated, OpenClaw starts to feel weirdly mystical."
+
+## Chapter Overview
+
+In this chapter, you will get fully clear on:
+
+- What `Provider`, `Model`, and `Auth` each mean
+- Why beginners constantly mix these three terms together
+- Why the official docs mention both Venice and Anthropic
+- How to choose the most stable default path the first time
+
+## Put the three terms into plain English first
+
+If you remember only the plain-English version once, you will usually stop mixing them up:
+
+| Term | Plain-English meaning | A simple way to think about it |
+| --- | --- | --- |
+| Provider | Model provider | Brain supplier |
+| Model | The specific model | The brain on duty today |
+| Auth | Authentication method | The key that gets you in |
+
+Here is a full example:
+
+- `anthropic` is the Provider
+- `anthropic/claude-opus-4-5` is the Model
+- An API key or `setup-token` is the Auth
+
+So when you say "my model is configured," what may actually be true is:
+
+- You only obtained an API key, but never set a default model
+- You connected the Provider, but the auth expired
+- You connected the Dashboard, but there is no usable model at all
+
+That is why many beginners run into the same strange experience:
+
+"The page opens, but the assistant does not answer me."
+
+At the core, it is not that it cannot speak. It is that **it has no valid brain it is allowed to call**.
+
+<Callout title="A note from Xiahua" tone="tip">
+  <p><code>Channel</code> decides where you speak from.</p>
+  <p><code>Provider</code> decides who does the thinking.</p>
+  <p>Once you mix those two together, troubleshooting becomes painful.</p>
+</Callout>
+
+## Why the official docs mention both Venice and Anthropic
+
+If you read the official docs, you will see two messages that both look like "the main path":
+
+1. The `providers` home page prominently highlights Venice
+2. The `getting-started` and `Anthropic` pages also present a very direct Anthropic path
+
+These are not contradictory.
+
+They are expressing two different things:
+
+- **Venice** is a recommended route that the provider page highlights
+- **Anthropic** is also explicitly supported, and for many users it is the more familiar mature path
+
+To reduce the cognitive load the first time through, this guide series uses a fixed main path:
+
+**Anthropic as the demonstration path.**
+
+The reason is simple:
+
+- The official docs clearly show two Anthropic routes: API key and `setup-token`
+- Many beginners are already more familiar with the Claude ecosystem
+- Once you get this path working, switching to Venice later is not hard
+
+In other words, this is not saying other Providers are bad. It is saying **the teaching path has to narrow down, or beginners drown in options**.
+
+## What beginners should choose the first time
+
+### Route A: Anthropic API key
+
+Best if:
+
+- You want the easiest path to understand
+- You are comfortable with usage-based billing
+- You want auth state and subscription state managed separately
+
+The most direct entry point is simply running onboarding again:
+
+```bash
+openclaw onboard
+```
+
+If you already have an API key, you can also pass it non-interactively as documented:
+
+```bash
+openclaw onboard --anthropic-api-key "$ANTHROPIC_API_KEY"
+```
+
+### Route B: Claude `setup-token`
+
+Best if:
+
+- You already use a Claude subscription
+- You want to reuse the subscription-side authentication flow
+
+The official docs give this entry point:
+
+```bash
+claude setup-token
+```
+
+Then paste it into OpenClaw, or complete the related auth flow on the Gateway host.
+
+## How to check whether this step is really done
+
+The most direct check is:
+
+```bash
+openclaw models status
+```
+
+You can think of it as "show me which models and auth methods are actually usable right now."
+
+If this state is wrong, later conversations in the Dashboard, Telegram, or any other channel will not be stable.
+
+If you only want to inspect the current state, do not rush to change anything yet.
+
+If you know you need to change the default model, then use the `openclaw models` commands, or more simply: **run `openclaw onboard` again and cleanly reset the main path.**
+
+## The safest beginner approach: keep one explicit default model
+
+Many people want all of this immediately:
+
+- One cheap model
+- One strongest model
+- One fallback model
+- One search-specific model
+
+That is not impossible.
+
+It is just **completely unnecessary on your first run**.
+
+The safest beginner strategy is to let the system keep only one default model that you know for sure works. That way, when something breaks, the search space is much smaller.
+
+You can remember the principle like this:
+
+**First get one single default value. Then talk about a multi-model strategy.**
+
+## These errors are basically all talking about auth
+
+The typical auth-related issues in the official docs, translated into plain English, look like this:
+
+### 1. `No API key found for provider "anthropic"`
+
+It does not mean "OpenClaw is broken."
+
+It means this Provider never received a usable key.
+
+### 2. 401 or token expired
+
+This usually means your auth expired, was revoked, or was pasted incorrectly.
+
+### 3. A new agent cannot access the key you already configured
+
+The official docs explicitly mention that auth can be scoped by agent or config file. Do not assume that "the main agent had it configured, so every other one will inherit it automatically."
+
+<Callout title="Xiahua's reminder" tone="warning">
+  <p>The easiest beginner mistake is to assume that "the page opens" means "the system is configured."</p>
+  <p>In reality, the UI opening only means the front door is open.</p>
+  <p>Whether it can think depends on the Provider and Auth behind it.</p>
+</Callout>
+
+## When to start exploring Venice, OpenRouter, or Ollama
+
+The answer is simple:
+
+**After you already have one stable default path running.**
+
+At that point, you can compare:
+
+- Which one is cheaper
+- Which one is stronger
+- Which one is better for privacy-first use
+- Which one is better for local models
+
+And you will not feel anxious.
+
+Because you already have a working baseline.
+
+## Today's Task
+
+Do these two things:
+
+```bash
+openclaw models status
+openclaw onboard
+```
+
+Then make sure you can answer these three questions:
+
+1. Which Provider am I using right now
+2. What is my current default model
+3. Am I using an API key or a `setup-token`
+
+If you cannot answer those, then this step has not really clicked yet.

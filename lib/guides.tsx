@@ -11,7 +11,8 @@ import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 
 import { guideMdxComponents } from "@/components/guide-mdx";
-import { GUIDE_LESSON_SLUG, PHASES, type PhaseEntry } from "@/lib/site-data";
+import type { Locale } from "@/lib/i18n";
+import { GUIDE_LESSON_SLUG, getPhases, hasPhaseSlug, type PhaseEntry } from "@/lib/site-data";
 
 export type TocEntry = {
   id: string;
@@ -62,11 +63,15 @@ type RuntimeModule = {
   default: (props: { components?: typeof guideMdxComponents }) => ReactNode;
 };
 
-const guidesDir = path.join(process.cwd(), "content", "guides");
+function getGuidesDir(locale: Locale) {
+  return locale === "en"
+    ? path.join(process.cwd(), "content", "guides", "en")
+    : path.join(process.cwd(), "content", "guides");
+}
 
-function getGuideFiles() {
+function getGuideFiles(locale: Locale) {
   return fs
-    .readdirSync(guidesDir)
+    .readdirSync(getGuidesDir(locale))
     .filter((file) => /^\d{2}-.*\.mdx$/.test(file))
     .sort();
 }
@@ -102,7 +107,7 @@ function parseGuideFrontmatter(slug: string, data: Record<string, unknown>): Gui
     throw new Error(`Guide "${slug}" has an invalid "phaseSlug" value.`);
   }
 
-  if (phaseSlug && !PHASES.some((phase) => phase.slug === phaseSlug)) {
+  if (phaseSlug && !hasPhaseSlug(phaseSlug)) {
     throw new Error(`Guide "${slug}" references an unknown phaseSlug "${phaseSlug}".`);
   }
 
@@ -187,12 +192,12 @@ function toGuideEntry(source: GuideSource): GuideEntry {
   };
 }
 
-const getGuideSources = cache(async () => {
-  const files = getGuideFiles();
+const getGuideSources = cache(async (locale: Locale) => {
+  const files = getGuideFiles(locale);
 
   const guides = files.map((fileName) => {
     const slug = fileName.replace(/\.mdx$/, "");
-    const raw = fs.readFileSync(path.join(guidesDir, fileName), "utf8");
+    const raw = fs.readFileSync(path.join(getGuidesDir(locale), fileName), "utf8");
     const { data, content } = matter(raw);
     const frontmatter = parseGuideFrontmatter(slug, data);
 
@@ -220,18 +225,18 @@ async function renderGuideContent(source: GuideSource) {
   return <Content components={guideMdxComponents} />;
 }
 
-export const getAllGuides = cache(async () => {
-  const guides = await getGuideSources();
+export const getAllGuides = cache(async (locale: Locale) => {
+  const guides = await getGuideSources(locale);
   return guides.map(toGuideEntry);
 });
 
-export const getGuideBySlug = cache(async (slug: string) => {
-  const guides = await getAllGuides();
+export const getGuideBySlug = cache(async (locale: Locale, slug: string) => {
+  const guides = await getAllGuides(locale);
   return guides.find((guide) => guide.slug === slug) || null;
 });
 
-export const getGuidePageBySlug = cache(async (slug: string) => {
-  const guides = await getGuideSources();
+export const getGuidePageBySlug = cache(async (locale: Locale, slug: string) => {
+  const guides = await getGuideSources(locale);
   const source = guides.find((guide) => guide.slug === slug);
 
   if (!source) {
@@ -244,8 +249,8 @@ export const getGuidePageBySlug = cache(async (slug: string) => {
   } satisfies GuidePageEntry;
 });
 
-export const getGuideNavigation = cache(async (slug: string) => {
-  const guides = await getAllGuides();
+export const getGuideNavigation = cache(async (locale: Locale, slug: string) => {
+  const guides = await getAllGuides(locale);
   const currentIndex = guides.findIndex((guide) => guide.slug === slug);
 
   return {
@@ -257,17 +262,19 @@ export const getGuideNavigation = cache(async (slug: string) => {
   };
 });
 
-export async function getGuideIndexData() {
-  const guides = await getAllGuides();
+export async function getGuideIndexData(locale: Locale) {
+  const guides = await getAllGuides(locale);
   const guide = guides.find((entry) => entry.slug === GUIDE_LESSON_SLUG);
-
-  const phases: GuidePhaseEntry[] = PHASES.map((phase) => ({
+  const phases = getPhases(locale).map((phase) => ({
     ...phase,
     lesson: guides.find((entry) => entry.slug === phase.lessonSlug) || null,
   }));
 
   return {
-    guide,
+    guide: guide || null,
     phases,
+  } satisfies {
+    guide: GuideEntry | null;
+    phases: GuidePhaseEntry[];
   };
 }

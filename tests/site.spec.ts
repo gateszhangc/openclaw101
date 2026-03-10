@@ -104,3 +104,64 @@ test("resources page supports direct entry filters plus search and filtering", a
     1,
   );
 });
+
+test("english locale keeps localized routes, copy, and filters", async ({ page }) => {
+  await page.goto("/en");
+
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+
+  const heroHeading = page.locator("h1").first();
+  await expect(heroHeading).toContainText("Get the order right");
+  await expect(heroHeading).toContainText("then start bending OpenClaw to your needs.");
+  await expect(page.getByRole("link", { name: "Open Guide" }).first()).toHaveAttribute(
+    "href",
+    "/en/guide",
+  );
+  await expect(page.getByRole("link", { name: "Browse Resources" }).first()).toHaveAttribute(
+    "href",
+    "/en/resources",
+  );
+
+  await page.getByRole("link", { name: "Open Guide" }).first().click();
+  await expect(page).toHaveURL(/\/en\/guide$/);
+  await expect(
+    page.getByRole("heading", { name: "Start from zero and learn OpenClaw in the right order" }),
+  ).toBeVisible();
+
+  const installPhase = page.getByTestId("guide-phase-phase-install");
+  await expect(installPhase).toContainText("Core guide");
+  await expect(installPhase).toContainText("Check these when you are blocked");
+  await expect(installPhase.getByRole("link", { name: "Enter stage" })).toHaveAttribute(
+    "href",
+    "/en/phases/phase-install",
+  );
+
+  await page.getByRole("link", { name: "中文" }).click();
+  await expect(page).toHaveURL(/\/guide$/);
+
+  await page.goto("/en/resources?category=skills");
+
+  await expect(
+    page.getByRole("heading", {
+      name: "Collect the OpenClaw links you will keep revisiting in one place",
+    }),
+  ).toBeVisible();
+  await expect(page.getByText("Current filters: category=Skills")).toBeVisible();
+  await expect(page.getByRole("link", { name: "中文" })).toHaveAttribute(
+    "href",
+    "/resources?category=skills",
+  );
+
+  const browser = page.getByTestId("resource-browser");
+  await expect(browser.getByTestId("resource-card")).toHaveCount(1);
+  await expect(browser.getByTestId("resource-card").filter({ hasText: "ClawHub Skill Ecosystem" })).toHaveCount(
+    1,
+  );
+
+  await browser.locator("select").first().selectOption("all");
+  await page.getByPlaceholder("Search resources, sources, or keywords").fill("GitHub");
+  await expect(browser.getByTestId("resource-card")).toHaveCount(3);
+  await expect(browser.getByTestId("resource-card").filter({ hasText: "GitHub Repository" })).toHaveCount(
+    1,
+  );
+});

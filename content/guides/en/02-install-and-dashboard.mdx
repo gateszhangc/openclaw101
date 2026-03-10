@@ -1,0 +1,243 @@
+---
+title: "OpenClaw from Scratch 02 | Get It Running First: Install, Onboard, Dashboard, Gateway"
+description: "On day one, do not aim to configure everything. Get OpenClaw truly running and finish your first conversation in the Dashboard."
+episode: 2
+roleName: "Xiahua"
+phaseSlug: "phase-install"
+order: 2
+keyTakeaways:
+  - "The lowest-friction first step for beginners is to get the Dashboard working on the computer they already have."
+  - "The official main path is to install the CLI with curl and then run openclaw onboard --install-daemon."
+  - "The fastest first chat is openclaw dashboard, so you do not need to connect a channel yet."
+  - "Do not judge success by gut feel. Check gateway status, status, and health."
+---
+
+# OpenClaw from Scratch 02 | Get It Running First: Install, Onboard, Dashboard, Gateway
+
+> "The first time you use OpenClaw, do not set the goal as 'finish every configuration.' Today you only need to do one thing: get it truly running, then hear its first reply in your browser."
+
+## Chapter Overview
+
+This chapter solves one thing only: **get your first conversation working from zero**.
+
+You will complete these steps:
+
+- Pick the lowest-friction environment to run it in
+- Install the CLI
+- Run `openclaw onboard --install-daemon`
+- Check whether Gateway is running properly in the background
+- Open the Dashboard and complete your first chat
+
+## Decide where it should live today
+
+If this is just your first experience, **the easiest path is to get it working on your current computer first**.
+
+If you already want it online 24/7, then consider an Ubuntu server.
+
+| Runtime option | Best for | Pros | Cons |
+| --- | --- | --- | --- |
+| Current computer | People who want to get it working first | Fastest, lowest friction | It goes offline when your computer shuts down |
+| Always-on device at home | People with a Mac mini or an old laptop | No extra hosting cost | You have to maintain the always-on machine yourself |
+| Cloud server | People who want long-term use from day one | Truly online 24/7 | Higher cognitive load at the start |
+
+If you are on Windows, the official docs are very clear:
+
+**Use WSL2 first. Do not fight native Windows for this.**
+
+<Callout title="Xiahua's reminder" tone="tip">
+  <p>"Get it working locally first, then move it to a cloud server" is almost always the fastest route.</p>
+  <p>What you need right now is not a perfect deployment. You need your first success.</p>
+</Callout>
+
+## Step 1: Install the CLI
+
+The official recommended install method is:
+
+<Command label="macOS / Linux">
+  {`curl -fsSL https://openclaw.ai/install.sh | bash`}
+</Command>
+
+If you are using Windows PowerShell:
+
+<Command label="Windows PowerShell">
+  {`iwr -useb https://openclaw.ai/install.ps1 | iex`}
+</Command>
+
+Once the install finishes, do not start digging through config files yet. Go straight to the onboarding flow.
+
+## Step 2: Run the onboarding flow
+
+<Command label="Main first-run path">
+  {`openclaw onboard --install-daemon`}
+</Command>
+
+This step matters because it does more than ask a few questions. It helps you complete all of this in one pass:
+
+- Choose a local or remote Gateway
+- Configure models and auth
+- Choose whether to connect channels
+- Install the background service
+- Generate the Gateway token
+- Initialize the workspace and base files
+
+### What beginners should choose
+
+If your goal today is only to **get the first conversation working**, choose like this:
+
+1. Pick local for `Gateway`
+2. Pick `Node` for the runtime
+3. Configure the model and auth first
+4. Skip channels for now. We will connect Telegram in the next chapter
+5. Choose to install the background service
+
+The official docs call out one thing especially clearly:
+
+**Telegram and WhatsApp work better on Node later on. Bun is not the recommended path.**
+
+## Step 3: Confirm that Gateway is actually running
+
+Once the wizard finishes, do not rely on a hunch to decide whether it worked.
+
+Check with commands directly:
+
+<Command label="Status and health checks">
+  {`openclaw gateway status
+openclaw status
+openclaw health
+openclaw security audit --deep`}
+</Command>
+
+You can think of them as four layers of checks:
+
+- `openclaw gateway status`: is the background service alive
+- `openclaw status`: does the overall state show any obvious issues
+- `openclaw health`: are critical dependencies such as model auth available
+- `openclaw security audit --deep`: are there obvious security configuration problems
+
+If `openclaw health` clearly tells you that auth is not configured correctly, that is not a small issue.
+
+Because **without model auth, the assistant may be online, but it still cannot answer you.**
+
+## Step 4: Open the Dashboard
+
+The easiest way to get your first chat is not Telegram or WhatsApp.
+
+The official docs are direct about this:
+
+**The fastest first conversation is through the Dashboard.**
+
+<Command label="Open the Dashboard">
+  {`openclaw dashboard`}
+</Command>
+
+If everything is working, it will open the Control UI in your browser.
+
+That is where you say your first sentence to OpenClaw.
+
+### What success should look like
+
+You do not need to guess.
+
+The signs are concrete:
+
+1. The Dashboard opens normally
+2. The page connects to your local Gateway
+3. You send a message and the assistant replies normally
+
+Start with three simple lines:
+
+- "Who are you?"
+- "Describe what you can do right now in three sentences."
+- "What should you call me from now on?"
+
+## If it does not open, check these first
+
+### 1. The Dashboard shows `unauthorized` or WebSocket `1008`
+
+This is most likely a Gateway token issue.
+
+The simplest official fix is: **run `openclaw dashboard` again**, so it opens the entry point with the correct token, or fill `gateway.auth.token` back into the UI as documented.
+
+### 2. The wizard finished, but `gateway status` never came up
+
+First check whether the background service failed to install, or whether you are running in an unsupported environment.
+
+If you are on Windows, go back to WSL2 first.
+
+### 3. You are using Bun
+
+Once you connect Telegram or WhatsApp later, you are likely to hit issues.
+
+Do not try to save this step. Switch back to Node now.
+
+### 4. You picked remote mode from the start
+
+Remember this: **credentials, workspace files, and config all live on the remote host.**
+
+That means a lot of "but I already configured this locally" intuition does not apply in remote mode.
+
+<Callout title="A note from Xiahua" tone="warning">
+  <p>The easiest beginner mistake on the first run is over-configuring.</p>
+  <p>You only needed one successful "hello," but instead you jumped straight into remote access, public URLs, group bots, and automation.</p>
+  <p>That is one of the most common ways beginners take the long way around.</p>
+</Callout>
+
+## Why we are not connecting Telegram yet
+
+Because your goal today is not "connect every possible entry point."
+
+Your goal today is this:
+
+**Move OpenClaw from an installed state to a state where it can already chat normally.**
+
+Once the Dashboard is working, troubleshooting Telegram later becomes much easier.
+
+Because then you already know:
+
+- Gateway is good
+- Model auth is good
+- The only truly new variable is the channel configuration
+
+That is why we split the learning path apart.
+
+## Today's Task
+
+<Step number="01" title="Run the install and first-start commands for real">
+  <Command label="The minimum command set for today">
+    {`curl -fsSL https://openclaw.ai/install.sh | bash
+openclaw onboard --install-daemon
+openclaw gateway status
+openclaw status
+openclaw health
+openclaw dashboard`}
+  </Command>
+</Step>
+
+<Step number="02" title="Write down what happened on your first run">
+  <ul>
+    <li>Which step worked on the first try</li>
+    <li>Which step felt the most stuck</li>
+    <li>What the first sentence was that you sent after opening the Dashboard</li>
+  </ul>
+</Step>
+
+## Today's Achievement
+
+If you already received the first reply inside the Dashboard, then today you were not merely "reading a tutorial."
+
+You completed your first real hands-on run.
+
+## Preview
+
+In the next chapter, we are not adding more features yet. We are going to make one especially confusing topic completely clear:
+
+**What Provider, Model, and Auth each actually mean.**
+
+In other words: who is doing the thinking, how you authenticate, and how to choose the default model.
+
+## Official References
+
+- [OpenClaw Getting Started Guide](https://docs.openclaw.ai/zh-CN/start/getting-started)
+- [OpenClaw Onboarding Guide](https://docs.openclaw.ai/zh-CN/start/onboarding)
+- [OpenClaw Dashboard](https://docs.openclaw.ai/zh-CN/web/dashboard)
+- [OpenClaw CLI dashboard](https://docs.openclaw.ai/zh-CN/cli/dashboard)

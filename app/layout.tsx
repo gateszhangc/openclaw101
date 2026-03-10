@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Noto_Sans_SC, Noto_Serif_SC } from "next/font/google";
+import { getHtmlLang } from "@/lib/i18n";
+import { getLayoutMetadata, SITE_NAME, SITE_URL } from "@/lib/site-data";
+import { getRequestLocale } from "@/lib/request-locale";
 import Script from "next/script";
 
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site-data";
 
 import "./globals.css";
 
@@ -29,14 +31,19 @@ const mono = JetBrains_Mono({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: {
-    default: `${SITE_NAME} | OpenClaw 新手入门站`,
-    template: `%s | ${SITE_NAME}`,
-  },
-  description: SITE_DESCRIPTION,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  const layoutMetadata = getLayoutMetadata(locale);
+
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: {
+      default: layoutMetadata.defaultTitle,
+      template: `%s | ${SITE_NAME}`,
+    },
+    description: layoutMetadata.description,
+  };
+}
 
 const gaTrackingId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
 const clarityProjectId = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID;
@@ -50,13 +57,15 @@ const shouldLoadClarity = Boolean(
     !/pending|placeholder/i.test(clarityProjectId),
 );
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getRequestLocale();
+
   return (
-    <html lang="zh-CN" data-theme="dark" suppressHydrationWarning>
+    <html lang={getHtmlLang(locale)} data-theme="dark" suppressHydrationWarning>
       <body className={`${sans.variable} ${serif.variable} ${mono.variable}`}>
         {shouldLoadGa ? (
           <>
@@ -82,9 +91,9 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, documen
         <div className="site-shell">
           <div className="site-grid" />
           <div className="hero-wash" />
-          <SiteHeader />
+          <SiteHeader locale={locale} />
           <main className="relative z-10 min-h-[calc(100vh-10rem)]">{children}</main>
-          <SiteFooter />
+          <SiteFooter locale={locale} />
         </div>
       </body>
     </html>

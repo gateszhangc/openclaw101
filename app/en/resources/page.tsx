@@ -16,7 +16,7 @@ export default async function Page({ searchParams }: ResourcesPageProps) {
 
   return (
     <ResourcesPage
-      locale="zh"
+      locale="en"
       searchParams={Promise.resolve({
         category: getFirstValue(params.category),
         query: getFirstValue(params.query),

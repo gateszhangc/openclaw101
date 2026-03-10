@@ -17,14 +17,14 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PhasePageProps): Promise<Metadata> {
   const { phaseSlug } = await params;
-  const phase = getPhaseBySlug("zh", phaseSlug);
+  const phase = getPhaseBySlug("en", phaseSlug);
 
   if (!phase) {
     return {};
   }
 
   return buildPageMetadata(
-    "zh",
+    "en",
     `/phases/${phase.slug}`,
     `${phase.label} ${phase.title}`,
     phase.description,
@@ -33,11 +33,11 @@ export async function generateMetadata({ params }: PhasePageProps): Promise<Meta
 
 export default async function Page({ params }: PhasePageProps) {
   const { phaseSlug } = await params;
-  const phase = getPhaseBySlug("zh", phaseSlug);
+  const phase = getPhaseBySlug("en", phaseSlug);
 
   if (!phase) {
     notFound();
   }
 
-  return <PhasePage locale="zh" phaseSlug={phaseSlug} />;
+  return <PhasePage locale="en" phaseSlug={phaseSlug} />;
 }

@@ -12,7 +12,7 @@ type GuidePageProps = {
 };
 
 export async function generateStaticParams() {
-  const guides = await getAllGuides("zh");
+  const guides = await getAllGuides("en");
   return guides.map((guide) => ({
     guideSlug: guide.slug,
   }));
@@ -20,22 +20,22 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: GuidePageProps): Promise<Metadata> {
   const { guideSlug } = await params;
-  const guide = await getGuideBySlug("zh", guideSlug);
+  const guide = await getGuideBySlug("en", guideSlug);
 
   if (!guide) {
     return {};
   }
 
-  return buildPageMetadata("zh", `/guide/${guide.slug}`, guide.title, guide.summary);
+  return buildPageMetadata("en", `/guide/${guide.slug}`, guide.title, guide.summary);
 }
 
 export default async function Page({ params }: GuidePageProps) {
   const { guideSlug } = await params;
-  const guide = await getGuideBySlug("zh", guideSlug);
+  const guide = await getGuideBySlug("en", guideSlug);
 
   if (!guide) {
     notFound();
   }
 
-  return <GuideDetailPage locale="zh" guideSlug={guideSlug} />;
+  return <GuideDetailPage locale="en" guideSlug={guideSlug} />;
 }
