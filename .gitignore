@@ -2,6 +2,7 @@ node_modules
 .next
 playwright-report
 test-results
+.codex-account-rotator
 npm-debug.log*
 tsconfig.tsbuildinfo
 .env
