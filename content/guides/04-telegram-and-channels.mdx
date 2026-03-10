@@ -1,13 +1,20 @@
 ---
 title: "OpenClaw 从零陪跑 04｜让它真正开口说话：Telegram 和聊天渠道"
-series: "OpenClaw 从零陪跑"
+description: "把 Telegram 接成第一个外部聊天入口，弄清 Gateway、Channel 和 pairing 的真实关系。"
 episode: 4
-role_name: "虾滑"
+roleName: "虾滑"
+phaseSlug: "phase-channels"
+order: 4
+keyTakeaways:
+  - "Gateway 是后台总控，Channel 是消息入口"
+  - "第一个外部渠道先接 Telegram，排错最简单"
+  - "Telegram 第一次私信默认常常会碰到 pairing，而不是直接回复"
+  - "机器人在线但不回，最常见的原因不是大模型坏了，而是渠道或 pairing 没走完"
 ---
 
 # OpenClaw 从零陪跑 04｜让它真正开口说话：Telegram 和聊天渠道
 
-> “接渠道不是给 OpenClaw 增加智商，而是给它增加入口。它本来就会思考，你现在做的是把电话线接上。” 
+> “接渠道不是给 OpenClaw 增加智商，而是给它增加入口。它本来就会思考，你现在做的是把电话线接上。”
 
 ## Chapter Overview
 
@@ -198,13 +205,6 @@ Bot 没坏，只是它在按安全策略办事。
 >
 > 真正的判断标准从来不是状态灯，而是：你能不能稳定地发消息、收到回复、再次发消息、再次收到回复。
 
-## Key Takeaways
-
-- `Gateway` 是后台总控，`Channel` 是消息入口
-- 第一个外部渠道先接 Telegram，排错最简单
-- Telegram 第一次私信默认常常会碰到 pairing，而不是直接回复
-- “机器人在线但不回”最常见的原因，不是大模型坏了，而是渠道或 pairing 没走完
-
 ## Today’s Task
 
 完成这套最小动作：
@@ -240,4 +240,3 @@ Bot 没坏，只是它在按安全策略办事。
 - [OpenClaw Telegram 文档](https://docs.openclaw.ai/zh-CN/channels/telegram)
 - [OpenClaw 入门指南](https://docs.openclaw.ai/zh-CN/start/getting-started)
 - [OpenClaw CLI pairing](https://docs.openclaw.ai/zh-CN/cli/pairing)
-

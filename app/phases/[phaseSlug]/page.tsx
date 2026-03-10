@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { getRoadmapData } from "@/lib/content";
+import { getGuideIndexData } from "@/lib/guides";
 import { PHASES, RESOURCE_ENTRIES } from "@/lib/site-data";
 
 type PhasePageProps = {
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: PhasePageProps): Promise<Meta
 
 export default async function PhasePage({ params }: PhasePageProps) {
   const { phaseSlug } = await params;
-  const { phases } = await getRoadmapData();
+  const { phases } = await getGuideIndexData();
   const currentIndex = phases.findIndex((phase) => phase.slug === phaseSlug);
 
   if (currentIndex === -1) {
@@ -72,17 +72,21 @@ export default async function PhasePage({ params }: PhasePageProps) {
             <div>
               <p className="section-kicker">核心教程</p>
               <h2 className="mt-2 font-[family-name:var(--font-serif)] text-3xl text-white">
-                {phase.lesson.title}
+                {phase.lesson ? phase.lesson.title : "该阶段教程整理中"}
               </h2>
             </div>
             <Link
-              href={`/tutorials/${phase.lesson.slug}`}
+              href={phase.lesson ? `/guide/${phase.lesson.slug}` : "/resources"}
               className="rounded-full bg-[var(--color-accent)] px-5 py-3 text-sm font-medium text-white"
             >
-              进入教程
+              {phase.lesson ? "进入教程" : "先看相关资源"}
             </Link>
           </div>
-          <p className="mt-4 max-w-3xl leading-7 text-white/66">{phase.lesson.summary}</p>
+          <p className="mt-4 max-w-3xl leading-7 text-white/66">
+            {phase.lesson
+              ? phase.lesson.summary
+              : "当前阶段的目标和资源已经整理完成。若正文教程尚未发布，可以先按本页清单推进。"}
+          </p>
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
             {phase.roadmapPoints.map((point) => (
               <div key={point} className="rounded-2xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white/70">

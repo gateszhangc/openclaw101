@@ -1,13 +1,20 @@
 ---
 title: "OpenClaw 从零陪跑 03｜给它接上大脑：模型、Provider 和认证"
-series: "OpenClaw 从零陪跑"
+description: "把 Provider、Model、Auth 三件事拆开，第一次就走一条稳的默认模型路线。"
 episode: 3
-role_name: "虾滑"
+roleName: "虾滑"
+phaseSlug: "phase-models"
+order: 3
+keyTakeaways:
+  - "Provider 是大脑供应商，Model 是具体大脑，Auth 是认证钥匙"
+  - "页面能打开，不等于模型认证已经配置好"
+  - "官方文档同时展示 Venice 和 Anthropic，但教程主线需要收敛"
+  - "第一次上手最稳的做法，是保留一个明确可用的默认模型"
 ---
 
 # OpenClaw 从零陪跑 03｜给它接上大脑：模型、Provider 和认证
 
-> “很多人以为自己是在配置模型，实际上他同时在碰 3 件事：大脑从哪来、怎么登录、默认让谁值班。只要这 3 件事没分清，OpenClaw 就会看起来特别像玄学。” 
+> “很多人以为自己是在配置模型，实际上他同时在碰 3 件事：大脑从哪来、怎么登录、默认让谁值班。只要这 3 件事没分清，OpenClaw 就会看起来特别像玄学。”
 
 ## Chapter Overview
 
@@ -46,13 +53,11 @@ role_name: "虾滑"
 
 本质上，它不是不会说话，而是**根本没有合法的大脑可调用**。
 
-> **虾滑的话**
->
-> `Channel` 决定你从哪说话。
->
-> `Provider` 决定谁来思考。
->
-> 这两个一旦混了，排错会特别痛苦。
+<Callout title="虾滑的话" tone="tip">
+  <p><code>Channel</code> 决定你从哪说话。</p>
+  <p><code>Provider</code> 决定谁来思考。</p>
+  <p>这两个一旦混了，排错会特别痛苦。</p>
+</Callout>
 
 ## 官方文档为什么会同时提 Venice 和 Anthropic
 
@@ -170,13 +175,11 @@ openclaw models status
 
 官方文档明确提到：认证是按智能体或配置文件来的，不要想当然地认为“主智能体配过了，别的也会自动继承”。
 
-> **虾滑提醒**
->
-> 新手最容易把“页面能打开”误判成“系统已经配置好”。
->
-> 实际上，UI 能打开，只说明前门开了。
->
-> 能不能思考，要看后面的 Provider 和 Auth。
+<Callout title="虾滑提醒" tone="warning">
+  <p>新手最容易把“页面能打开”误判成“系统已经配置好”。</p>
+  <p>实际上，UI 能打开，只说明前门开了。</p>
+  <p>能不能思考，要看后面的 Provider 和 Auth。</p>
+</Callout>
 
 ## 什么时候再去研究 Venice、OpenRouter、Ollama
 
@@ -195,13 +198,6 @@ openclaw models status
 
 因为你已经有一个能工作的基准点了。
 
-## Key Takeaways
-
-- `Provider` 是大脑供应商，`Model` 是具体大脑，`Auth` 是认证钥匙
-- 页面能打开，不等于模型认证已经配置好
-- 官方文档同时展示 Venice 和 Anthropic，但教程主线需要收敛
-- 第一次上手最稳的做法，是保留一个明确可用的默认模型
-
 ## Today’s Task
 
 做这两件事：
@@ -218,27 +214,3 @@ openclaw onboard
 3. 我走的是 API Key 还是 `setup-token`
 
 如果答不上来，就说明这一步还没真正吃透。
-
-## Today’s Achievement
-
-从今天开始，你不再是“凭感觉改 AI 配置”的人了。
-
-你已经能把 Provider、Model、Auth 这 3 层拆开看。
-
-这会让你后面接 Telegram、排查回复问题时，快很多。
-
-## Preview
-
-下一篇我们把“能在浏览器里聊”推进到“能在真实聊天工具里聊”。
-
-主线只接一个渠道：**Telegram**。
-
-因为它是大多数新手第一次接外部渠道时，最省心的一条路。
-
-## 官方参考
-
-- [OpenClaw 模型提供商总览](https://docs.openclaw.ai/zh-CN/providers)
-- [Anthropic Provider 文档](https://docs.openclaw.ai/zh-CN/providers/anthropic)
-- [OpenClaw CLI models](https://docs.openclaw.ai/zh-CN/cli/models)
-- [OpenClaw 入门指南](https://docs.openclaw.ai/zh-CN/start/getting-started)
-

@@ -7,18 +7,19 @@ export function SiteFooter() {
         <div className="space-y-3">
           <p className="font-[family-name:var(--font-serif)] text-xl text-white">OpenClaw101</p>
           <p className="max-w-2xl leading-7">
-            用一条清晰学习路线，把 OpenClaw 从第一次聊天一路带到技能和自动化。教程是主线，资源页负责把高价值入口收拢到一起。
+            Guide 负责告诉你下一步学什么，Resources 负责在你卡住时把官方、社区、源码和 Skills
+            入口快速拉回来。
           </p>
         </div>
         <div className="grid grid-cols-2 gap-4 text-sm">
-          <Link href="/tutorials" className="transition hover:text-white">
-            教程页
-          </Link>
-          <Link href="/roadmap" className="transition hover:text-white">
-            路线图
+          <Link href="/guide" className="transition hover:text-white">
+            Guide
           </Link>
           <Link href="/resources" className="transition hover:text-white">
-            资源页
+            Resources
+          </Link>
+          <Link href="/roadmap" className="transition hover:text-white">
+            Stages
           </Link>
           <Link
             href="https://github.com/openclaw/openclaw"

@@ -14,22 +14,16 @@ export function SiteHeader() {
             <p className="font-[family-name:var(--font-serif)] text-lg font-semibold text-white">
               OpenClaw101
             </p>
-            <p className="text-xs uppercase tracking-[0.28em] text-white/45">Starter Route</p>
+            <p className="text-xs uppercase tracking-[0.28em] text-white/45">Guide + Resources</p>
           </div>
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm text-white/70 md:flex">
-          <Link href="/tutorials" className="transition hover:text-white">
-            教程页
-          </Link>
-          <Link href="/roadmap" className="transition hover:text-white">
-            教程路线
+          <Link href="/guide" className="transition hover:text-white">
+            Guide
           </Link>
           <Link href="/resources" className="transition hover:text-white">
-            资源聚合
-          </Link>
-          <Link href="/#learning-route" className="transition hover:text-white">
-            学习路径
+            Resources
           </Link>
           <Link
             href="https://github.com/openclaw/openclaw"
@@ -44,10 +38,10 @@ export function SiteHeader() {
         <div className="flex items-center gap-3">
           <ThemeToggle />
           <Link
-            href="/tutorials"
+            href="/guide"
             className="hidden rounded-full bg-[var(--color-accent)] px-5 py-3 text-sm font-medium text-white shadow-[0_10px_40px_rgba(255,90,54,0.35)] transition hover:bg-[var(--color-accent-strong)] md:inline-flex"
           >
-            开始学习
+            开始上手
           </Link>
         </div>
       </div>

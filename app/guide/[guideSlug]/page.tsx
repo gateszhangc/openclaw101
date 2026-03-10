@@ -2,50 +2,50 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { getAllTutorials, getTutorialBySlug, getTutorialNavigation } from "@/lib/content";
+import { getAllGuides, getGuideNavigation, getGuidePageBySlug } from "@/lib/guides";
 import { PHASES } from "@/lib/site-data";
 
-type TutorialPageProps = {
+type GuidePageProps = {
   params: Promise<{
-    lessonSlug: string;
+    guideSlug: string;
   }>;
 };
 
 export async function generateStaticParams() {
-  const tutorials = await getAllTutorials();
-  return tutorials.map((tutorial) => ({
-    lessonSlug: tutorial.slug,
+  const guides = await getAllGuides();
+  return guides.map((guide) => ({
+    guideSlug: guide.slug,
   }));
 }
 
-export async function generateMetadata({ params }: TutorialPageProps): Promise<Metadata> {
-  const { lessonSlug } = await params;
-  const tutorial = await getTutorialBySlug(lessonSlug);
+export async function generateMetadata({ params }: GuidePageProps): Promise<Metadata> {
+  const { guideSlug } = await params;
+  const guide = await getGuidePageBySlug(guideSlug);
 
-  if (!tutorial) {
+  if (!guide) {
     return {};
   }
 
   return {
-    title: tutorial.title,
-    description: tutorial.summary,
+    title: guide.title,
+    description: guide.summary,
   };
 }
 
-export default async function TutorialDetailPage({ params }: TutorialPageProps) {
-  const { lessonSlug } = await params;
-  const tutorial = await getTutorialBySlug(lessonSlug);
+export default async function GuideDetailPage({ params }: GuidePageProps) {
+  const { guideSlug } = await params;
+  const guide = await getGuidePageBySlug(guideSlug);
 
-  if (!tutorial) {
+  if (!guide) {
     notFound();
   }
 
-  const navigation = await getTutorialNavigation(lessonSlug);
-  const phase = tutorial.phaseSlug
-    ? PHASES.find((entry) => entry.slug === tutorial.phaseSlug) || null
+  const navigation = await getGuideNavigation(guideSlug);
+  const phase = guide.phaseSlug
+    ? PHASES.find((entry) => entry.slug === guide.phaseSlug) || null
     : null;
-  const backHref = phase ? `/phases/${phase.slug}` : "/tutorials";
-  const backLabel = phase ? "返回阶段页" : "返回教程页";
+  const backHref = phase ? `/phases/${phase.slug}` : "/guide";
+  const backLabel = phase ? "返回阶段页" : "返回 Guide";
 
   return (
     <div className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 lg:px-8">
@@ -56,21 +56,21 @@ export default async function TutorialDetailPage({ params }: TutorialPageProps) 
         <div className="mt-6 grid gap-6 xl:grid-cols-[1fr_300px]">
           <div>
             <p className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.24em] text-white/45">
-              {phase ? `${phase.label} / ${phase.shortTitle}` : `Guide / OpenClaw 从零陪跑`}
+              {phase ? `${phase.label} / ${phase.shortTitle}` : "Guide / OpenClaw 从零陪跑"}
             </p>
             <h1 className="mt-3 font-[family-name:var(--font-serif)] text-4xl leading-tight text-white">
-              {tutorial.title}
+              {guide.title}
             </h1>
-            <p className="mt-4 max-w-3xl text-lg leading-8 text-white/66">{tutorial.summary}</p>
+            <p className="mt-4 max-w-3xl text-lg leading-8 text-white/66">{guide.summary}</p>
             <div className="mt-6 flex flex-wrap gap-3 text-sm text-white/50">
               <span className="rounded-full border border-white/10 px-4 py-2">
-                {tutorial.readingTime} 分钟阅读
+                {guide.readingTime} 分钟阅读
               </span>
               <span className="rounded-full border border-white/10 px-4 py-2">
-                角色：{tutorial.roleName}
+                角色：{guide.roleName}
               </span>
               <span className="rounded-full border border-white/10 px-4 py-2">
-                Episode 0{tutorial.episode}
+                Episode 0{guide.episode}
               </span>
             </div>
           </div>
@@ -78,7 +78,7 @@ export default async function TutorialDetailPage({ params }: TutorialPageProps) 
           <aside className="surface-card rounded-[2rem] p-5 xl:sticky xl:top-28 xl:h-fit">
             <p className="section-kicker">章节目录</p>
             <div className="mt-4 space-y-2">
-              {tutorial.toc.map((entry) => (
+              {guide.toc.map((entry) => (
                 <a
                   key={entry.id}
                   href={`#${entry.id}`}
@@ -92,11 +92,11 @@ export default async function TutorialDetailPage({ params }: TutorialPageProps) 
         </div>
       </section>
 
-      {tutorial.keyTakeaways.length > 0 ? (
+      {guide.keyTakeaways.length > 0 ? (
         <section className="mt-8 surface-card rounded-[2.5rem] p-6 sm:p-8">
           <p className="section-kicker">关键要点</p>
           <div className="mt-4 flex flex-wrap gap-3">
-            {tutorial.keyTakeaways.map((item) => (
+            {guide.keyTakeaways.map((item) => (
               <span
                 key={item}
                 className="rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-sm text-white/75"
@@ -109,10 +109,7 @@ export default async function TutorialDetailPage({ params }: TutorialPageProps) 
       ) : null}
 
       <section className="mt-8 reading-panel rounded-[2.5rem] p-6 sm:p-8 lg:p-10">
-        <div
-          className="tutorial-prose max-w-none"
-          dangerouslySetInnerHTML={{ __html: tutorial.html }}
-        />
+        <div className="guide-prose max-w-none">{guide.content}</div>
       </section>
 
       <section className="mt-8 flex flex-col gap-4 rounded-[2.5rem] border border-white/10 bg-white/[0.035] p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
@@ -125,7 +122,7 @@ export default async function TutorialDetailPage({ params }: TutorialPageProps) 
         <div className="flex flex-wrap gap-3">
           {navigation.previous ? (
             <Link
-              href={`/tutorials/${navigation.previous.slug}`}
+              href={`/guide/${navigation.previous.slug}`}
               className="rounded-full border border-white/10 px-5 py-3 text-sm text-white/80"
             >
               上一篇
@@ -133,7 +130,7 @@ export default async function TutorialDetailPage({ params }: TutorialPageProps) 
           ) : null}
           {navigation.next ? (
             <Link
-              href={`/tutorials/${navigation.next.slug}`}
+              href={`/guide/${navigation.next.slug}`}
               className="rounded-full bg-[var(--color-accent)] px-5 py-3 text-sm font-medium text-white"
             >
               下一篇

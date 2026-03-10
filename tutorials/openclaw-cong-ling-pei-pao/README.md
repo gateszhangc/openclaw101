@@ -10,12 +10,12 @@
 
 ## 阅读顺序
 
-1. [01-what-is-openclaw.md](./01-what-is-openclaw.md)
-2. [02-install-and-dashboard.md](./02-install-and-dashboard.md)
-3. [03-models-and-auth.md](./03-models-and-auth.md)
-4. [04-telegram-and-channels.md](./04-telegram-and-channels.md)
-5. [05-soul-and-memory.md](./05-soul-and-memory.md)
-6. [06-skills-and-automation.md](./06-skills-and-automation.md)
+1. [01-what-is-openclaw.mdx](../../content/guides/01-what-is-openclaw.mdx)
+2. [02-install-and-dashboard.mdx](../../content/guides/02-install-and-dashboard.mdx)
+3. [03-models-and-auth.mdx](../../content/guides/03-models-and-auth.mdx)
+4. [04-telegram-and-channels.mdx](../../content/guides/04-telegram-and-channels.mdx)
+5. [05-soul-and-memory.mdx](../../content/guides/05-soul-and-memory.mdx)
+6. [06-skills-and-automation.mdx](../../content/guides/06-skills-and-automation.mdx)
 7. [SITE-STYLE.md](./SITE-STYLE.md)
 8. [HOMEPAGE-COPY.md](./HOMEPAGE-COPY.md)
 

@@ -1,13 +1,20 @@
 ---
 title: "OpenClaw 从零陪跑 02｜先把它跑起来：安装、onboard、Dashboard、Gateway"
-series: "OpenClaw 从零陪跑"
+description: "第一次上手别追求全部配完，先把 OpenClaw 真正跑起来，并在 Dashboard 里完成第一轮对话。"
 episode: 2
-role_name: "虾滑"
+roleName: "虾滑"
+phaseSlug: "phase-install"
+order: 2
+keyTakeaways:
+  - "新手最省脑子的第一步，是先在当前电脑上跑通 Dashboard"
+  - "官方推荐主线是 curl 安装 CLI 后执行 openclaw onboard --install-daemon"
+  - "第一次聊天最快的方法是 openclaw dashboard，不需要先接渠道"
+  - "判断成功不要靠感觉，要看 gateway status、status、health"
 ---
 
 # OpenClaw 从零陪跑 02｜先把它跑起来：安装、onboard、Dashboard、Gateway
 
-> “第一次上手 OpenClaw，别把目标定成‘全部配完’。今天只做一件事：让它真的跑起来，然后在浏览器里跟你说上第一句话。” 
+> “第一次上手 OpenClaw，别把目标定成‘全部配完’。今天只做一件事：让它真的跑起来，然后在浏览器里跟你说上第一句话。”
 
 ## Chapter Overview
 
@@ -37,33 +44,32 @@ role_name: "虾滑"
 
 **优先用 WSL2，不要直接在原生 Windows 上折腾。**
 
-> **虾滑提醒**
->
-> “先在本机跑通，再迁移到云服务器”几乎总是最省时间的。
->
-> 你现在最需要的不是完美部署，而是第一次成功。
+<Callout title="虾滑提醒" tone="tip">
+  <p>“先在本机跑通，再迁移到云服务器”几乎总是最省时间的。</p>
+  <p>你现在最需要的不是完美部署，而是第一次成功。</p>
+</Callout>
 
 ## 第一步：安装 CLI
 
 官方推荐的安装方式是：
 
-```bash
-curl -fsSL https://openclaw.ai/install.sh | bash
-```
+<Command label="macOS / Linux">
+  {`curl -fsSL https://openclaw.ai/install.sh | bash`}
+</Command>
 
 如果你是 Windows PowerShell：
 
-```powershell
-iwr -useb https://openclaw.ai/install.ps1 | iex
-```
+<Command label="Windows PowerShell">
+  {`iwr -useb https://openclaw.ai/install.ps1 | iex`}
+</Command>
 
 安装结束后，不用急着到处翻配置文件。下一步直接跑向导。
 
 ## 第二步：运行 onboarding 向导
 
-```bash
-openclaw onboard --install-daemon
-```
+<Command label="首次跑通主线">
+  {`openclaw onboard --install-daemon`}
+</Command>
 
 这一步很关键，因为它不是单纯问你几个问题，而是在帮你一次性完成这几件事：
 
@@ -94,12 +100,12 @@ openclaw onboard --install-daemon
 
 直接用命令看：
 
-```bash
-openclaw gateway status
+<Command label="状态与健康检查">
+  {`openclaw gateway status
 openclaw status
 openclaw health
-openclaw security audit --deep
-```
+openclaw security audit --deep`}
+</Command>
 
 你可以把它们理解成四层检查：
 
@@ -120,9 +126,9 @@ openclaw security audit --deep
 
 **最快的第一次聊天，是先用 Dashboard。**
 
-```bash
-openclaw dashboard
-```
+<Command label="打开 Dashboard">
+  {`openclaw dashboard`}
+</Command>
 
 如果一切正常，它会打开浏览器里的 Control UI。
 
@@ -170,13 +176,11 @@ openclaw dashboard
 
 这意味着很多“我本地明明配过了”的直觉，在远程模式下都不成立。
 
-> **虾滑的话**
->
-> 第一次跑通时，最容易犯的错叫“配置过度”。
->
-> 你本来只需要一句“你好”，结果转头开始折腾远程访问、公开地址、群组机器人、自动化。
->
-> 这就是新手最常见的绕路方式。
+<Callout title="虾滑的话" tone="warning">
+  <p>第一次跑通时，最容易犯的错叫“配置过度”。</p>
+  <p>你本来只需要一句“你好”，结果转头开始折腾远程访问、公开地址、群组机器人、自动化。</p>
+  <p>这就是新手最常见的绕路方式。</p>
+</Callout>
 
 ## 今天的主线为什么先不接 Telegram
 
@@ -196,31 +200,26 @@ openclaw dashboard
 
 这就是为什么我们要把学习路径拆开。
 
-## Key Takeaways
-
-- 新手最省脑子的第一步，是先在当前电脑上跑通 Dashboard
-- 官方推荐主线是 `curl ... | bash` + `openclaw onboard --install-daemon`
-- 第一次聊天最快的方法是 `openclaw dashboard`，不需要先接渠道
-- 判断成功不要靠感觉，要看 `gateway status`、`status`、`health`
-
 ## Today’s Task
 
-把下面这套命令真的跑一遍：
-
-```bash
-curl -fsSL https://openclaw.ai/install.sh | bash
+<Step number="01" title="把安装和首次启动命令真的跑一遍">
+  <Command label="今天需要执行的最小命令集">
+    {`curl -fsSL https://openclaw.ai/install.sh | bash
 openclaw onboard --install-daemon
 openclaw gateway status
 openclaw status
 openclaw health
-openclaw dashboard
-```
+openclaw dashboard`}
+  </Command>
+</Step>
 
-如果你已经跑过，就把结果记下来：
-
-- 哪一步一次成功
-- 哪一步最卡
-- 打开 Dashboard 以后你发出的第一句话是什么
+<Step number="02" title="把第一次上手结果记下来">
+  <ul>
+    <li>哪一步一次成功</li>
+    <li>哪一步最卡</li>
+    <li>打开 Dashboard 以后你发出的第一句话是什么</li>
+  </ul>
+</Step>
 
 ## Today’s Achievement
 
@@ -242,4 +241,3 @@ openclaw dashboard
 - [OpenClaw 新手引导](https://docs.openclaw.ai/zh-CN/start/onboarding)
 - [OpenClaw Dashboard](https://docs.openclaw.ai/zh-CN/web/dashboard)
 - [OpenClaw CLI dashboard](https://docs.openclaw.ai/zh-CN/cli/dashboard)
-

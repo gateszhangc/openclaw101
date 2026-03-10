@@ -1,13 +1,21 @@
 ---
 title: "OpenClaw 从零陪跑 06｜让它开始干活：Skills、ClawHub、Heartbeat、Cron"
-series: "OpenClaw 从零陪跑"
+description: "把会聊天的 OpenClaw 推进到能主动干活的状态，重点理解 Skills、Heartbeat 和 Cron 的分工。"
 episode: 6
-role_name: "虾滑"
+roleName: "虾滑"
+phaseSlug: "phase-automation"
+order: 6
+keyTakeaways:
+  - "Skill 是教助手如何使用工具的说明目录，不是魔法插件"
+  - "新手第一次安装 Skill，优先装到当前工作区，并预期开新会话后再测试"
+  - "第三方 Skill 要按不受信任代码看待"
+  - "Heartbeat 适合周期性感知，Cron 适合精确定时"
+  - "最稳的做法不是二选一，而是把 Heartbeat 和 Cron 组合起来"
 ---
 
 # OpenClaw 从零陪跑 06｜让它开始干活：Skills、ClawHub、Heartbeat、Cron
 
-> “会聊天的 AI 很多，真正像助手的 AI 很少。区别通常不是它会不会说，而是它有没有工具、记不记得上下文、会不会在该出现的时候主动出现。” 
+> “会聊天的 AI 很多，真正像助手的 AI 很少。区别通常不是它会不会说，而是它有没有工具、记不记得上下文、会不会在该出现的时候主动出现。”
 
 ## Chapter Overview
 
@@ -260,14 +268,6 @@ openclaw cron add \
 OpenClaw 真正厉害的地方，不是“无限叠功能”。
 
 而是你能慢慢长出一套适合自己的协作系统。
-
-## Key Takeaways
-
-- Skill 是教助手如何使用工具的说明目录，不是魔法插件
-- 新手第一次安装 Skill，优先装到当前工作区，并预期开新会话后再测试
-- 第三方 Skill 要按不受信任代码看待
-- Heartbeat 适合周期性感知，Cron 适合精确定时
-- 最稳的做法不是二选一，而是把 Heartbeat 和 Cron 组合起来
 
 ## Today’s Task
 
