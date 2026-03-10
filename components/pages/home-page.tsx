@@ -270,11 +270,15 @@ export async function HomePage({ locale }: HomePageProps) {
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <Link href={localizeHref(locale, `/guide/${guide.slug}`)} className="site-button-primary">
+              <Link
+                href={localizeHref(locale, `/guide/${guide.slug}`)}
+                prefetch={false}
+                className="site-button-primary"
+              >
                 {copy.primaryCta}
                 <ArrowRight className="size-4" />
               </Link>
-              <Link href={localizeHref(locale, "/resources")} className="site-button-secondary">
+              <Link href={localizeHref(locale, "/resources")} prefetch={false} className="site-button-secondary">
                 {copy.secondaryCta}
                 <ArrowUpRight className="size-4" />
               </Link>

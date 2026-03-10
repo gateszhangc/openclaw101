@@ -68,7 +68,9 @@ export async function RoadmapPage({ locale }: RoadmapPageProps) {
         <div className="mt-6 flex flex-wrap gap-3">
           <Link
             href={localizeHref(locale, "/guide")}
-            className="rounded-full bg-[var(--color-accent)] px-5 py-3 text-sm font-medium text-white"
+            prefetch={false}
+            style={{ color: "var(--color-accent-ink)" }}
+            className="rounded-full bg-[var(--color-accent)] px-5 py-3 text-sm font-medium"
           >
             {copy.guideCta}
           </Link>

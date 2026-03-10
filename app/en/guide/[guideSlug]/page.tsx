@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: GuidePageProps): Promise<Meta
     return {};
   }
 
-  return buildPageMetadata("en", `/guide/${guide.slug}`, guide.title, guide.summary);
+  return buildPageMetadata("en", `/guide/${guide.slug}`, guide.title, guide.summary, guide.socialImage);
 }
 
 export default async function Page({ params }: GuidePageProps) {

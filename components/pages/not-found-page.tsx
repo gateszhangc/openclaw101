@@ -36,7 +36,9 @@ export function NotFoundPage({ locale }: NotFoundPageProps) {
       <div className="flex flex-wrap justify-center gap-3">
         <Link
           href={localizeHref(locale, "/")}
-          className="rounded-full bg-[var(--color-accent)] px-5 py-3 text-sm font-medium text-white"
+          prefetch={false}
+          style={{ color: "var(--color-accent-ink)" }}
+          className="rounded-full bg-[var(--color-accent)] px-5 py-3 text-sm font-medium"
         >
           {copy.home}
         </Link>

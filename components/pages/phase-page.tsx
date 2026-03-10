@@ -104,7 +104,8 @@ export async function PhasePage({ locale, phaseSlug }: PhasePageProps) {
                   ? localizeHref(locale, `/guide/${phase.lesson.slug}`)
                   : localizeHref(locale, "/resources")
               }
-              className="rounded-full bg-[var(--color-accent)] px-5 py-3 text-sm font-medium text-white"
+              style={{ color: "var(--color-accent-ink)" }}
+              className="rounded-full bg-[var(--color-accent)] px-5 py-3 text-sm font-medium"
             >
               {phase.lesson ? copy.enterGuide : copy.viewResources}
             </Link>
@@ -180,7 +181,8 @@ export async function PhasePage({ locale, phaseSlug }: PhasePageProps) {
           {nextPhase ? (
             <Link
               href={localizeHref(locale, `/phases/${nextPhase.slug}`)}
-              className="rounded-full bg-[var(--color-accent)] px-5 py-3 text-sm font-medium text-white"
+              style={{ color: "var(--color-accent-ink)" }}
+              className="rounded-full bg-[var(--color-accent)] px-5 py-3 text-sm font-medium"
             >
               {copy.next}
             </Link>

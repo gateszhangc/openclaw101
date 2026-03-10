@@ -37,9 +37,11 @@ export function LocaleSwitcher({ locale }: LocaleSwitcherProps) {
           <Link
             key={option.locale}
             href={target}
+            prefetch={false}
+            style={isActive ? { color: "var(--color-accent-ink)" } : undefined}
             className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
               isActive
-                ? "bg-[var(--color-accent)] text-white shadow-[0_10px_24px_rgba(255,107,74,0.24)]"
+                ? "bg-[var(--color-accent)] shadow-[0_10px_24px_rgba(255,107,74,0.24)]"
                 : "text-white/58 hover:text-white"
             }`}
           >

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { LocaleSwitcher } from "@/components/locale-switcher";
@@ -45,9 +46,17 @@ export function SiteHeader({ locale }: SiteHeaderProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[color:var(--header-bg)] backdrop-blur-2xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-        <Link href={localizeHref(locale, "/")} className="flex items-center gap-3">
-          <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/12 bg-white/[0.04] text-sm font-semibold text-white shadow-[0_12px_32px_rgba(0,0,0,0.26)]">
-            O1
+        <Link href={localizeHref(locale, "/")} prefetch={false} className="flex items-center gap-3">
+          <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl border border-white/12 bg-white/[0.04] shadow-[0_12px_32px_rgba(0,0,0,0.26)]">
+            <Image
+              src="/branding/logo-mark.png"
+              alt="OpenClaw101"
+              width={64}
+              height={64}
+              priority
+              className="h-9 w-9 object-contain"
+              data-testid="site-logo-mark"
+            />
           </span>
           <div className="leading-tight">
             <p className="font-[family-name:var(--font-serif)] text-lg font-semibold tracking-[-0.02em] text-white">
@@ -61,14 +70,14 @@ export function SiteHeader({ locale }: SiteHeaderProps) {
 
         <nav className="hidden items-center gap-6 text-sm text-white/68 xl:flex">
           {sectionLinks.map((link) => (
-            <Link key={link.label} href={link.href} className="transition hover:text-white">
+            <Link key={link.label} href={link.href} prefetch={false} className="transition hover:text-white">
               {link.label}
             </Link>
           ))}
-          <Link href={localizeHref(locale, "/guide")} className="transition hover:text-white">
+          <Link href={localizeHref(locale, "/guide")} prefetch={false} className="transition hover:text-white">
             {copy.guide}
           </Link>
-          <Link href={localizeHref(locale, "/resources")} className="transition hover:text-white">
+          <Link href={localizeHref(locale, "/resources")} prefetch={false} className="transition hover:text-white">
             {copy.resources}
           </Link>
           <Link
@@ -85,6 +94,7 @@ export function SiteHeader({ locale }: SiteHeaderProps) {
           <LocaleSwitcher locale={locale} />
           <Link
             href={localizeHref(locale, "/guide")}
+            prefetch={false}
             className="site-button-primary hidden md:inline-flex"
           >
             {copy.cta}

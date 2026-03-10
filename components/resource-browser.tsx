@@ -188,7 +188,8 @@ export function ResourceBrowser({
                 href={resource.url}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-[var(--color-accent)] px-4 py-2 text-sm font-medium text-white transition group-hover:bg-[var(--color-accent-strong)]"
+                style={{ color: "var(--color-accent-ink)" }}
+                className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-[var(--color-accent)] px-4 py-2 text-sm font-medium transition group-hover:bg-[var(--color-accent-strong)]"
               >
                 {copy.openResource}
               </Link>

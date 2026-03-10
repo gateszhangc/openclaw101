@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { HTMLAttributes, ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
@@ -17,6 +18,12 @@ type StepProps = {
 type CommandProps = {
   children: ReactNode;
   label?: string;
+};
+
+type GuideFigureProps = {
+  src: string;
+  alt: string;
+  caption?: string;
 };
 
 type HeadingProps = HTMLAttributes<HTMLHeadingElement>;
@@ -79,10 +86,28 @@ export function Command({ children, label }: CommandProps) {
   );
 }
 
+export function GuideFigure({ src, alt, caption }: GuideFigureProps) {
+  return (
+    <figure data-testid="guide-figure" className="guide-figure">
+      <Image
+        src={src}
+        alt={alt}
+        width={1400}
+        height={900}
+        className="guide-figure-image"
+        data-testid="guide-figure-image"
+        sizes="(min-width: 1024px) 72rem, 100vw"
+      />
+      {caption ? <figcaption className="guide-figure-caption">{caption}</figcaption> : null}
+    </figure>
+  );
+}
+
 export const guideMdxComponents = {
   h2: (props: HeadingProps) => <GuideHeading as="h2" {...props} />,
   h3: (props: HeadingProps) => <GuideHeading as="h3" {...props} />,
   Callout,
   Step,
   Command,
+  GuideFigure,
 };

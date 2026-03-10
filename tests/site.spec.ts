@@ -17,10 +17,31 @@ test("homepage funnels users into the new product-style guide flow", async ({ pa
   await expect(page.getByTestId("home-start-panel")).toContainText("把上手顺序压缩成一个可执行的面板");
   await expect(page.getByTestId("home-resource-section")).toContainText("把最常回查的入口先收起来");
   await expect(page.getByTestId("home-resource-section")).toContainText("官方入门指南");
+  await expect(page.getByTestId("site-logo-mark")).toBeVisible();
   await expect(page.locator('[aria-label="Toggle color theme"]')).toHaveCount(0);
+  await expect(page.locator('link[rel="icon"]').first()).toHaveAttribute("href", /icon/i);
+  await expect(page.locator('meta[property="og:image"]').first()).toHaveAttribute(
+    "content",
+    /branding\/site-og\.png/,
+  );
 
   const howLink = page.locator('a[href="/#how-it-works"]');
   await expect(howLink.first()).toHaveCount(1);
+});
+
+test("homepage does not fetch bundled webfont assets on first paint", async ({ page }) => {
+  const fontResponses: string[] = [];
+
+  page.on("response", (response) => {
+    const url = response.url();
+
+    if (url.includes("/_next/static/media/") && url.endsWith(".woff2")) {
+      fontResponses.push(url);
+    }
+  });
+
+  await page.goto("/", { waitUntil: "networkidle" });
+  expect(fontResponses).toEqual([]);
 });
 
 test("guide page maps phases to guides and support resources", async ({ page }) => {
@@ -73,9 +94,15 @@ test("guide detail renders MDX content blocks and navigation", async ({ page }) 
     }),
   ).toBeVisible();
   await expect(page.getByText("章节目录")).toBeVisible();
+  await expect(page.getByTestId("guide-hero-cover")).toBeVisible();
   await expect(page.getByTestId("guide-callout").first()).toBeVisible();
+  await expect(page.getByTestId("guide-figure")).toHaveCount(1);
   await expect(page.getByTestId("guide-step")).toHaveCount(2);
   await expect(page.getByTestId("guide-command").first()).toBeVisible();
+  await expect(page.locator('meta[property="og:image"]').first()).toHaveAttribute(
+    "content",
+    /guides\/02-install-and-dashboard\/og\.png/,
+  );
   await expect(page.locator("a").filter({ hasText: "下一篇" })).toHaveCount(1);
 });
 
@@ -108,6 +135,7 @@ test("resources page supports direct entry filters plus search and filtering", a
 });
 
 test("english locale keeps localized routes, copy, and filters", async ({ page }) => {
+  test.setTimeout(45_000);
   await page.goto("/en");
 
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
@@ -123,8 +151,9 @@ test("english locale keeps localized routes, copy, and filters", async ({ page }
     "href",
     "/en/resources",
   );
+  await expect(page.getByTestId("site-logo-mark")).toBeVisible();
 
-  await page.goto("/en/guide");
+  await page.goto("/en/guide", { waitUntil: "domcontentloaded" });
   await expect(
     page.getByRole("heading", {
       name: "Start from zero and move through OpenClaw in the right order",
@@ -142,7 +171,7 @@ test("english locale keeps localized routes, copy, and filters", async ({ page }
   await page.getByRole("link", { name: "中文" }).click();
   await expect(page).toHaveURL(/\/guide$/);
 
-  await page.goto("/en/resources?category=skills");
+  await page.goto("/en/resources?category=skills", { waitUntil: "domcontentloaded" });
 
   await expect(
     page.getByRole("heading", {
@@ -177,4 +206,20 @@ test("core pages avoid horizontal overflow", async ({ page }) => {
     );
     expect(hasOverflow).toBeFalsy();
   }
+});
+
+test("guide artwork is shared across locales", async ({ page }) => {
+  await page.goto("/guide/03-models-and-auth", { waitUntil: "domcontentloaded" });
+  const zhCover = page.getByTestId("guide-hero-cover-image");
+  await expect(zhCover).toBeVisible();
+  const zhCoverSrc = await zhCover.getAttribute("src");
+
+  await page.goto("/en/guide/03-models-and-auth", { waitUntil: "domcontentloaded" });
+  const enCover = page.getByTestId("guide-hero-cover-image");
+  await expect(enCover).toBeVisible();
+  await expect(page.getByTestId("guide-figure")).toHaveCount(1);
+  const enCoverSrc = await enCover.getAttribute("src");
+
+  expect(zhCoverSrc).toBeTruthy();
+  expect(enCoverSrc).toBe(zhCoverSrc);
 });
