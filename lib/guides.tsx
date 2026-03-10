@@ -11,7 +11,6 @@ import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 
 import { guideMdxComponents } from "@/components/guide-mdx";
-import { getGuideMedia, type GuideMediaEntry } from "@/lib/guide-media";
 import type { Locale } from "@/lib/i18n";
 import { GUIDE_LESSON_SLUG, getPhases, hasPhaseSlug, type PhaseEntry } from "@/lib/site-data";
 
@@ -42,7 +41,7 @@ export type GuideEntry = {
   toc: TocEntry[];
   keyTakeaways: string[];
   phaseSlug?: string;
-} & GuideMediaEntry;
+};
 
 export type GuidePageEntry = GuideEntry & {
   content: ReactNode;
@@ -190,7 +189,6 @@ function toGuideEntry(source: GuideSource): GuideEntry {
     toc: source.toc,
     keyTakeaways: source.frontmatter.keyTakeaways,
     phaseSlug: source.frontmatter.phaseSlug,
-    ...getGuideMedia(source.slug),
   };
 }
 

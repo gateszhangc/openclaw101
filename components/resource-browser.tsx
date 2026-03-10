@@ -67,9 +67,8 @@ export function ResourceBrowser({
     [resources],
   );
   const [query, setQuery] = useState(initialQuery);
-  const [category, setCategory] = useState<ResourceCategory | "all">(() =>
-    resolveInitialCategory(initialCategory, categories),
-  );
+  const resolvedInitialCategory = resolveInitialCategory(initialCategory, categories);
+  const [category, setCategory] = useState<ResourceCategory | "all">(resolvedInitialCategory);
   const [language, setLanguage] = useState<ResourceLanguage | "all">("all");
   const deferredQuery = useDeferredValue(query);
 
@@ -78,8 +77,8 @@ export function ResourceBrowser({
   }, [initialQuery]);
 
   useEffect(() => {
-    setCategory(resolveInitialCategory(initialCategory, categories));
-  }, [categories, initialCategory]);
+    setCategory(resolvedInitialCategory);
+  }, [resolvedInitialCategory]);
 
   const filteredResources = useMemo(() => {
     const keyword = deferredQuery.trim().toLowerCase();

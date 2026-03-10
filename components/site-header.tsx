@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { LocaleSwitcher } from "@/components/locale-switcher";
@@ -47,16 +46,11 @@ export function SiteHeader({ locale }: SiteHeaderProps) {
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[color:var(--header-bg)] backdrop-blur-2xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
         <Link href={localizeHref(locale, "/")} prefetch={false} className="flex items-center gap-3">
-          <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl border border-white/12 bg-white/[0.04] shadow-[0_12px_32px_rgba(0,0,0,0.26)]">
-            <Image
-              src="/branding/logo-mark.png"
-              alt="OpenClaw101"
-              width={64}
-              height={64}
-              priority
-              className="h-9 w-9 object-contain"
-              data-testid="site-logo-mark"
-            />
+          <span
+            data-testid="site-logo-mark"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/12 bg-white/[0.04] text-sm font-semibold text-white shadow-[0_12px_32px_rgba(0,0,0,0.26)]"
+          >
+            O1
           </span>
           <div className="leading-tight">
             <p className="font-[family-name:var(--font-serif)] text-lg font-semibold tracking-[-0.02em] text-white">

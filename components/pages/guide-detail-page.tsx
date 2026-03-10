@@ -1,5 +1,4 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
 import { getGuideNavigation, getGuidePageBySlug } from "@/lib/guides";
@@ -112,21 +111,6 @@ export async function GuideDetailPage({ locale, guideSlug }: GuideDetailPageProp
           </aside>
         </div>
 
-        <div
-          data-testid="guide-hero-cover"
-          className="mt-8 overflow-hidden rounded-[1.75rem] border border-white/10 bg-black/20"
-        >
-          <Image
-            src={guide.coverImage}
-            alt={guide.title}
-            width={1600}
-            height={900}
-            priority
-            sizes="(min-width: 1280px) 76rem, 100vw"
-            className="guide-hero-cover-image"
-            data-testid="guide-hero-cover-image"
-          />
-        </div>
       </section>
 
       {guide.keyTakeaways.length > 0 ? (
