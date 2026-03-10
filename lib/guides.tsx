@@ -12,6 +12,7 @@ import remarkGfm from "remark-gfm";
 
 import { guideMdxComponents } from "@/components/guide-mdx";
 import type { Locale } from "@/lib/i18n";
+import { getGuideCoverAsset } from "@/lib/site-assets";
 import { GUIDE_LESSON_SLUG, getPhases, hasPhaseSlug, type PhaseEntry } from "@/lib/site-data";
 
 export type TocEntry = {
@@ -41,6 +42,7 @@ export type GuideEntry = {
   toc: TocEntry[];
   keyTakeaways: string[];
   phaseSlug?: string;
+  coverImage: string;
 };
 
 export type GuidePageEntry = GuideEntry & {
@@ -189,6 +191,7 @@ function toGuideEntry(source: GuideSource): GuideEntry {
     toc: source.toc,
     keyTakeaways: source.frontmatter.keyTakeaways,
     phaseSlug: source.frontmatter.phaseSlug,
+    coverImage: getGuideCoverAsset(source.slug).path,
   };
 }
 

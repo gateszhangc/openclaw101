@@ -1,4 +1,5 @@
 import { ArrowRight, ArrowUpRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { getGuideIndexData } from "@/lib/guides";
@@ -159,8 +160,19 @@ export async function GuideIndexPage({ locale }: GuideIndexPageProps) {
         </article>
 
         <article className="surface-card rounded-[2rem] p-6">
-          <p className="section-kicker">{copy.episodePrefix}</p>
-          <p className="mt-4 text-sm text-white/58">
+          <div className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-black/20">
+            <Image
+              data-testid="guide-entry-cover"
+              src={guide.coverImage}
+              alt={guide.title}
+              width={1600}
+              height={896}
+              className="h-auto w-full object-cover"
+              sizes="(min-width: 1280px) 320px, 100vw"
+            />
+          </div>
+          <p className="mt-5 section-kicker">{copy.episodePrefix}</p>
+          <p className="mt-5 text-sm text-white/58">
             {copy.episodePrefix} 0{guide.episode}
           </p>
           <h3 className="mt-3 font-[family-name:var(--font-serif)] text-2xl text-white">

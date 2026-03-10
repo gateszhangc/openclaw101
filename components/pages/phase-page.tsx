@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { getGuideIndexData } from "@/lib/guides";
@@ -113,6 +114,19 @@ export async function PhasePage({ locale, phaseSlug }: PhasePageProps) {
           <p className="mt-4 max-w-3xl leading-7 text-white/66">
             {phase.lesson ? phase.lesson.summary : copy.pendingBody}
           </p>
+          {phase.lesson ? (
+            <div className="mt-6 overflow-hidden rounded-[1.75rem] border border-white/10 bg-black/20">
+              <Image
+                data-testid="phase-guide-cover"
+                src={phase.lesson.coverImage}
+                alt={phase.lesson.title}
+                width={1600}
+                height={896}
+                className="h-auto w-full object-cover"
+                sizes="(min-width: 1280px) 720px, 100vw"
+              />
+            </div>
+          ) : null}
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
             {phase.roadmapPoints.map((point) => (
               <div

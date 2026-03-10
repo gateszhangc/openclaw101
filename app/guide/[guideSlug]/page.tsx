@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { GuideDetailPage } from "@/components/pages/guide-detail-page";
 import { buildPageMetadata } from "@/lib/metadata";
 import { getAllGuides, getGuideBySlug } from "@/lib/guides";
+import { getGuideCoverAsset } from "@/lib/site-assets";
 
 type GuidePageProps = {
   params: Promise<{
@@ -26,7 +27,11 @@ export async function generateMetadata({ params }: GuidePageProps): Promise<Meta
     return {};
   }
 
-  return buildPageMetadata("zh", `/guide/${guide.slug}`, guide.title, guide.summary);
+  return buildPageMetadata("zh", `/guide/${guide.slug}`, guide.title, guide.summary, {
+    socialImage: getGuideCoverAsset(guide.slug),
+    twitterImage: getGuideCoverAsset(guide.slug),
+    imageAlt: guide.title,
+  });
 }
 
 export default async function Page({ params }: GuidePageProps) {

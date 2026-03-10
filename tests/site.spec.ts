@@ -89,10 +89,33 @@ test("guide detail renders MDX content blocks and navigation", async ({ page }) 
     }),
   ).toBeVisible();
   await expect(page.getByText("章节目录")).toBeVisible();
+  await expect(page.getByTestId("guide-cover-image")).toBeVisible();
   await expect(page.getByTestId("guide-callout").first()).toBeVisible();
   await expect(page.getByTestId("guide-step")).toHaveCount(2);
   await expect(page.getByTestId("guide-command").first()).toBeVisible();
   await expect(page.locator("a").filter({ hasText: "下一篇" })).toHaveCount(1);
+});
+
+test("site exposes generated icons and localized social images", async ({ page }) => {
+  await page.goto("/");
+
+  await expect(
+    page.locator('link[rel="icon"][sizes="32x32"][href="/favicon-32x32.png"]'),
+  ).toHaveCount(1);
+  await expect(
+    page.locator('link[rel="apple-touch-icon"][href="/apple-touch-icon.png"]'),
+  ).toHaveCount(1);
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+    "content",
+    /\/social\/og-image\.png$/,
+  );
+
+  await page.goto("/guide/02-install-and-dashboard");
+  await expect(page.getByTestId("guide-cover-image")).toBeVisible();
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+    "content",
+    /\/guides\/covers\/02-install-and-dashboard\.jpg$/,
+  );
 });
 
 test("legacy tutorial routes are removed", async ({ page }) => {
@@ -149,6 +172,7 @@ test("english locale keeps localized routes, copy, and filters", async ({ page }
       name: "Start from zero and move through OpenClaw in the right order",
     }),
   ).toBeVisible();
+  await expect(page.getByTestId("guide-entry-cover")).toBeVisible();
 
   const installPhase = page.getByTestId("guide-phase-phase-install");
   await expect(installPhase).toContainText("Core lesson");
@@ -216,5 +240,6 @@ test("guide detail stays localized across locales", async ({ page }) => {
     }),
   ).toBeVisible();
   await expect(page.getByText("Table of contents")).toBeVisible();
+  await expect(page.getByTestId("guide-cover-image")).toBeVisible();
   await expect(page.getByTestId("guide-callout")).toHaveCount(2);
 });

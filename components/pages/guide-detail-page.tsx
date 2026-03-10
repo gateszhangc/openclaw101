@@ -1,4 +1,5 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { getGuideNavigation, getGuidePageBySlug } from "@/lib/guides";
@@ -91,6 +92,19 @@ export async function GuideDetailPage({ locale, guideSlug }: GuideDetailPageProp
               <span className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2">
                 {copy.episodePrefix} 0{guide.episode}
               </span>
+            </div>
+
+            <div className="mt-8 overflow-hidden rounded-[1.75rem] border border-white/10 bg-black/20">
+              <Image
+                data-testid="guide-cover-image"
+                src={guide.coverImage}
+                alt={guide.title}
+                width={1600}
+                height={896}
+                className="h-auto w-full object-cover"
+                priority={guide.episode <= 2}
+                sizes="(min-width: 1280px) 720px, 100vw"
+              />
             </div>
           </div>
 

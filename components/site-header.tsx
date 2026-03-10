@@ -1,7 +1,9 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { localizeHref, type Locale } from "@/lib/i18n";
+import { SITE_LOGO_ASSET } from "@/lib/site-assets";
 
 type SiteHeaderProps = {
   locale: Locale;
@@ -48,9 +50,16 @@ export function SiteHeader({ locale }: SiteHeaderProps) {
         <Link href={localizeHref(locale, "/")} prefetch={false} className="flex items-center gap-3">
           <span
             data-testid="site-logo-mark"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/12 bg-white/[0.04] text-sm font-semibold text-white shadow-[0_12px_32px_rgba(0,0,0,0.26)]"
+            className="inline-flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl border border-white/12 bg-white/[0.04] shadow-[0_12px_32px_rgba(0,0,0,0.26)]"
           >
-            O1
+            <Image
+              src={SITE_LOGO_ASSET.path}
+              alt=""
+              width={SITE_LOGO_ASSET.width}
+              height={SITE_LOGO_ASSET.height}
+              className="h-full w-full object-cover"
+              priority
+            />
           </span>
           <div className="leading-tight">
             <p className="font-[family-name:var(--font-serif)] text-lg font-semibold tracking-[-0.02em] text-white">
