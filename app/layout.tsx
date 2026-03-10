@@ -65,7 +65,7 @@ export default async function RootLayout({
   const locale = await getRequestLocale();
 
   return (
-    <html lang={getHtmlLang(locale)} data-theme="dark" suppressHydrationWarning>
+    <html lang={getHtmlLang(locale)}>
       <body className={`${sans.variable} ${serif.variable} ${mono.variable}`}>
         {shouldLoadGa ? (
           <>

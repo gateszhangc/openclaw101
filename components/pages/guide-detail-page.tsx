@@ -1,3 +1,4 @@
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 import { getGuideNavigation, getGuidePageBySlug } from "@/lib/guides";
@@ -21,6 +22,7 @@ const COPY = {
     previous: "上一篇",
     next: "下一篇",
     toc: "章节目录",
+    tocBody: "读长文时，先知道自己现在位于哪一段。",
     minutes: (value: number) => `${value} 分钟阅读`,
     episodePrefix: "Episode",
   },
@@ -35,6 +37,7 @@ const COPY = {
     previous: "Previous",
     next: "Next",
     toc: "Table of contents",
+    tocBody: "When the lesson gets long, keep the current section visible.",
     minutes: (value: number) => `${value} min read`,
     episodePrefix: "Episode",
   },
@@ -50,47 +53,56 @@ export async function GuideDetailPage({ locale, guideSlug }: GuideDetailPageProp
 
   const navigation = await getGuideNavigation(locale, guideSlug);
   const phase = guide.phaseSlug ? getPhaseBySlug(locale, guide.phaseSlug) : null;
-  const backHref = phase ? localizeHref(locale, `/phases/${phase.slug}`) : localizeHref(locale, "/guide");
+  const backHref = phase
+    ? localizeHref(locale, `/phases/${phase.slug}`)
+    : localizeHref(locale, "/guide");
   const backLabel = phase ? copy.backPhase : copy.backGuide;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 lg:px-8">
-      <section className="surface-card rounded-[2.5rem] p-6 sm:p-8">
-        <Link href={backHref} className="text-sm text-white/55 transition hover:text-white">
-          ← {backLabel}
-        </Link>
-        <div className="mt-6 grid gap-6 xl:grid-cols-[1fr_300px]">
+    <div className="page-shell">
+      <section className="surface-card-strong rounded-[2rem] px-6 py-8 sm:px-8 sm:py-9">
+        <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
           <div>
-            <p className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.24em] text-white/45">
-              {phase
-                ? `${phase.label} / ${phase.shortTitle}`
-                : copy.guideFallback}
-            </p>
-            <h1 className="mt-3 font-[family-name:var(--font-serif)] text-4xl leading-tight text-white">
-              {guide.title}
-            </h1>
-            <p className="mt-4 max-w-3xl text-lg leading-8 text-white/66">{guide.summary}</p>
-            <div className="mt-6 flex flex-wrap gap-3 text-sm text-white/50">
-              <span className="rounded-full border border-white/10 px-4 py-2">
+            <Link
+              href={backHref}
+              className="inline-flex items-center gap-2 text-sm text-white/58 transition hover:text-white"
+            >
+              <ArrowLeft className="size-4" />
+              {backLabel}
+            </Link>
+
+            <div className="mt-6">
+              <p className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.24em] text-white/42">
+                {phase ? `${phase.label} / ${phase.shortTitle}` : copy.guideFallback}
+              </p>
+              <h1 className="mt-4 max-w-4xl font-[family-name:var(--font-serif)] text-4xl leading-tight tracking-[-0.03em] text-white sm:text-5xl">
+                {guide.title}
+              </h1>
+              <p className="mt-4 max-w-3xl text-lg leading-8 text-white/68">{guide.summary}</p>
+            </div>
+
+            <div className="mt-6 flex flex-wrap gap-3 text-sm text-white/54">
+              <span className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2">
                 {copy.minutes(guide.readingTime)}
               </span>
-              <span className="rounded-full border border-white/10 px-4 py-2">
+              <span className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2">
                 {copy.role}: {guide.roleName}
               </span>
-              <span className="rounded-full border border-white/10 px-4 py-2">
+              <span className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2">
                 {copy.episodePrefix} 0{guide.episode}
               </span>
             </div>
           </div>
 
-          <aside className="surface-card rounded-[2rem] p-5 xl:sticky xl:top-28 xl:h-fit">
+          <aside className="surface-card rounded-[1.75rem] p-5 xl:sticky xl:top-28 xl:h-fit">
             <p className="section-kicker">{copy.toc}</p>
-            <div className="mt-4 space-y-2">
+            <p className="mt-3 text-sm leading-7 text-white/60">{copy.tocBody}</p>
+            <div className="mt-5 space-y-2">
               {guide.toc.map((entry) => (
                 <a
                   key={entry.id}
                   href={`#${entry.id}`}
-                  className="block rounded-2xl px-3 py-2 text-sm text-white/66 transition hover:bg-white/[0.06] hover:text-white"
+                  className="block rounded-[1rem] border border-transparent px-3 py-2 text-sm text-white/66 transition hover:border-white/10 hover:bg-white/[0.03] hover:text-white"
                 >
                   {entry.text}
                 </a>
@@ -101,13 +113,13 @@ export async function GuideDetailPage({ locale, guideSlug }: GuideDetailPageProp
       </section>
 
       {guide.keyTakeaways.length > 0 ? (
-        <section className="mt-8 surface-card rounded-[2.5rem] p-6 sm:p-8">
+        <section className="mt-8 surface-card rounded-[2rem] px-6 py-7 sm:px-8 sm:py-8">
           <p className="section-kicker">{copy.keyTakeaways}</p>
-          <div className="mt-4 flex flex-wrap gap-3">
+          <div className="mt-5 flex flex-wrap gap-3">
             {guide.keyTakeaways.map((item) => (
               <span
                 key={item}
-                className="rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-sm text-white/75"
+                className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-white/72"
               >
                 {item}
               </span>
@@ -116,32 +128,52 @@ export async function GuideDetailPage({ locale, guideSlug }: GuideDetailPageProp
         </section>
       ) : null}
 
-      <section className="mt-8 reading-panel rounded-[2.5rem] p-6 sm:p-8 lg:p-10">
+      <section className="mt-8 reading-panel rounded-[2rem] px-6 py-7 sm:px-8 sm:py-8 lg:px-10 lg:py-10">
         <div className="guide-prose max-w-none">{guide.content}</div>
       </section>
 
-      <section className="mt-8 flex flex-col gap-4 rounded-[2.5rem] border border-white/10 bg-white/[0.035] p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
-        <div className="space-y-2">
-          <p className="section-kicker">{copy.continue}</p>
-          <h2 className="font-[family-name:var(--font-serif)] text-3xl text-white">
-            {copy.continueTitle}
-          </h2>
+      <section className="mt-8 surface-card rounded-[2rem] px-6 py-7 sm:px-8 sm:py-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="space-y-2">
+            <p className="section-kicker">{copy.continue}</p>
+            <h2 className="font-[family-name:var(--font-serif)] text-3xl text-white">
+              {copy.continueTitle}
+            </h2>
+          </div>
         </div>
-        <div className="flex flex-wrap gap-3">
+
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
           {navigation.previous ? (
             <Link
               href={localizeHref(locale, `/guide/${navigation.previous.slug}`)}
-              className="rounded-full border border-white/10 px-5 py-3 text-sm text-white/80"
+              className="rounded-[1.5rem] border border-white/10 bg-black/20 p-5 transition hover:border-white/20"
             >
-              {copy.previous}
+              <p className="section-kicker">{copy.previous}</p>
+              <h3 className="mt-3 font-[family-name:var(--font-serif)] text-2xl text-white">
+                {navigation.previous.title}
+              </h3>
+              <p className="mt-3 inline-flex items-center gap-2 text-sm text-white/66">
+                <ArrowLeft className="size-4" />
+                {copy.previous}
+              </p>
             </Link>
-          ) : null}
+          ) : (
+            <div className="hidden md:block" />
+          )}
+
           {navigation.next ? (
             <Link
               href={localizeHref(locale, `/guide/${navigation.next.slug}`)}
-              className="rounded-full bg-[var(--color-accent)] px-5 py-3 text-sm font-medium text-white"
+              className="rounded-[1.5rem] border border-[rgba(255,107,74,0.2)] bg-[rgba(255,107,74,0.08)] p-5 transition hover:border-[rgba(255,107,74,0.32)]"
             >
-              {copy.next}
+              <p className="section-kicker">{copy.next}</p>
+              <h3 className="mt-3 font-[family-name:var(--font-serif)] text-2xl text-white">
+                {navigation.next.title}
+              </h3>
+              <p className="mt-3 inline-flex items-center gap-2 text-sm text-white/78">
+                {copy.next}
+                <ArrowRight className="size-4 text-[var(--color-accent)]" />
+              </p>
             </Link>
           ) : null}
         </div>

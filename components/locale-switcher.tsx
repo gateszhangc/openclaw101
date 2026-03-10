@@ -25,7 +25,7 @@ export function LocaleSwitcher({ locale }: LocaleSwitcherProps) {
 
   return (
     <div
-      className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] p-1"
+      className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.03] p-1 shadow-[0_10px_28px_rgba(0,0,0,0.18)]"
       aria-label="Locale switcher"
     >
       {OPTIONS.map((option) => {
@@ -39,7 +39,7 @@ export function LocaleSwitcher({ locale }: LocaleSwitcherProps) {
             href={target}
             className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
               isActive
-                ? "bg-white text-neutral-950"
+                ? "bg-[var(--color-accent)] text-white shadow-[0_10px_24px_rgba(255,107,74,0.24)]"
                 : "text-white/58 hover:text-white"
             }`}
           >

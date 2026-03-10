@@ -19,6 +19,13 @@ type ResourceBrowserProps = {
   initialQuery?: string;
 };
 
+function resolveInitialCategory(
+  initialCategory: ResourceCategory | "",
+  categories: ResourceCategory[],
+): ResourceCategory | "all" {
+  return initialCategory && categories.includes(initialCategory) ? initialCategory : "all";
+}
+
 const COPY = {
   zh: {
     all: "全部",
@@ -28,6 +35,8 @@ const COPY = {
     emptyLead: "当前筛选没有匹配到资源。可以清空筛选，或者回到",
     emptyLink: "Guide",
     emptyTail: "重新确认自己要解决的是哪一类问题。",
+    browserHint: "像搜工具而不是翻目录一样使用它。",
+    openResource: "打开资源",
   },
   en: {
     all: "All",
@@ -36,7 +45,9 @@ const COPY = {
     clear: "Clear filters",
     emptyLead: "No resources matched the current filters. Clear them, or go back to",
     emptyLink: "Guide",
-    emptyTail: "to confirm which kind of problem you are trying to solve.",
+    emptyTail: "to confirm what kind of problem you are trying to solve.",
+    browserHint: "Use it like a retrieval tool, not a category archive.",
+    openResource: "Open resource",
   },
 } as const;
 
@@ -47,11 +58,6 @@ export function ResourceBrowser({
   initialQuery = "",
 }: ResourceBrowserProps) {
   const copy = COPY[locale];
-  const [query, setQuery] = useState(initialQuery);
-  const [category, setCategory] = useState<ResourceCategory | "all">("all");
-  const [language, setLanguage] = useState<ResourceLanguage | "all">("all");
-  const deferredQuery = useDeferredValue(query);
-
   const categories = useMemo(
     () => [...new Set(resources.map((resource) => resource.category))],
     [resources],
@@ -60,15 +66,19 @@ export function ResourceBrowser({
     () => [...new Set(resources.map((resource) => resource.language))],
     [resources],
   );
+  const [query, setQuery] = useState(initialQuery);
+  const [category, setCategory] = useState<ResourceCategory | "all">(() =>
+    resolveInitialCategory(initialCategory, categories),
+  );
+  const [language, setLanguage] = useState<ResourceLanguage | "all">("all");
+  const deferredQuery = useDeferredValue(query);
 
   useEffect(() => {
     setQuery(initialQuery);
   }, [initialQuery]);
 
   useEffect(() => {
-    setCategory(
-      initialCategory && categories.includes(initialCategory) ? initialCategory : "all",
-    );
+    setCategory(resolveInitialCategory(initialCategory, categories));
   }, [categories, initialCategory]);
 
   const filteredResources = useMemo(() => {
@@ -90,17 +100,20 @@ export function ResourceBrowser({
 
   return (
     <div className="space-y-8" data-testid="resource-browser">
-      <div className="grid gap-4 rounded-[2rem] border border-white/10 bg-white/[0.035] p-5 sm:grid-cols-[minmax(0,1fr)_auto_auto]">
-        <input
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder={copy.searchPlaceholder}
-          className="h-12 rounded-full border border-white/10 bg-black/10 px-5 text-sm text-white outline-none transition placeholder:text-white/35 focus:border-white/25"
-        />
+      <div className="grid gap-4 rounded-[1.75rem] border border-white/10 bg-black/20 p-5 sm:grid-cols-[minmax(0,1fr)_auto_auto]">
+        <div className="space-y-3">
+          <input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder={copy.searchPlaceholder}
+            className="h-12 w-full rounded-full border border-white/10 bg-white/[0.03] px-5 text-sm text-white outline-none transition placeholder:text-white/30 focus:border-white/22"
+          />
+          <p className="text-sm text-white/48">{copy.browserHint}</p>
+        </div>
         <select
           value={category}
           onChange={(event) => setCategory(event.target.value as ResourceCategory | "all")}
-          className="h-12 rounded-full border border-white/10 bg-black/10 px-4 text-sm text-white outline-none"
+          className="h-12 rounded-full border border-white/10 bg-white/[0.03] px-4 text-sm text-white outline-none"
         >
           <option value="all" className="bg-neutral-950">
             {copy.all}
@@ -114,7 +127,7 @@ export function ResourceBrowser({
         <select
           value={language}
           onChange={(event) => setLanguage(event.target.value as ResourceLanguage | "all")}
-          className="h-12 rounded-full border border-white/10 bg-black/10 px-4 text-sm text-white outline-none"
+          className="h-12 rounded-full border border-white/10 bg-white/[0.03] px-4 text-sm text-white outline-none"
         >
           <option value="all" className="bg-neutral-950">
             {copy.all}
@@ -150,9 +163,9 @@ export function ResourceBrowser({
             <article
               key={resource.slug}
               data-testid="resource-card"
-              className="group flex h-full flex-col rounded-[2rem] border border-white/10 bg-white/[0.035] p-6 transition hover:-translate-y-1 hover:border-white/20"
+              className="group flex h-full flex-col rounded-[1.75rem] border border-white/10 bg-black/20 p-6 transition hover:-translate-y-1 hover:border-white/20"
             >
-              <div className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.24em] text-white/45">
+              <div className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.24em] text-white/42">
                 <span>{getResourceCategoryLabel(locale, resource.category)}</span>
                 <span>{getResourceLanguageLabel(locale, resource.language)}</span>
                 <span>{resource.source}</span>
@@ -160,12 +173,12 @@ export function ResourceBrowser({
               <h3 className="mt-4 font-[family-name:var(--font-serif)] text-2xl text-white">
                 {resource.title}
               </h3>
-              <p className="mt-3 flex-1 leading-7 text-white/68">{resource.summary}</p>
+              <p className="mt-3 flex-1 leading-7 text-white/66">{resource.summary}</p>
               <div className="mt-5 flex flex-wrap gap-2">
                 {resource.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-xs text-white/60"
+                    className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-white/58"
                   >
                     {tag}
                   </span>
@@ -175,15 +188,15 @@ export function ResourceBrowser({
                 href={resource.url}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-6 inline-flex w-fit rounded-full bg-[var(--color-accent)] px-4 py-2 text-sm font-medium text-white transition group-hover:bg-[var(--color-accent-strong)]"
+                className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-[var(--color-accent)] px-4 py-2 text-sm font-medium text-white transition group-hover:bg-[var(--color-accent-strong)]"
               >
-                {locale === "en" ? "Open resource" : "打开资源"}
+                {copy.openResource}
               </Link>
             </article>
           ))}
         </div>
       ) : (
-        <div className="rounded-[2rem] border border-dashed border-white/10 bg-black/10 px-6 py-10 text-center text-sm leading-7 text-white/60">
+        <div className="rounded-[1.75rem] border border-dashed border-white/10 bg-black/20 px-6 py-10 text-center text-sm leading-7 text-white/60">
           {copy.emptyLead}
           <Link
             href={localizeHref(locale, "/guide")}
